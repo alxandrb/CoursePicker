@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Courses Ironman & 70.3 — Profils 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E1116; --surface:#161B22; --surface2:#1B222B; --line:#262E38;
+    --text:#E7EDF4; --muted:#8A97A6; --faint:#5C6773;
+    --swim:#38BDF8; --bike:#FBBF24; --run:#FB7185;
+    --easy:#34D399; --mid:#FBBF24; --hard:#F43F5E;
+    --accent:#38BDF8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:"Saira",system-ui,-apple-system,sans-serif;
+    font-size:15px;line-height:1.4;padding-bottom:48px;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 14px}
+
+  header.mast{padding:26px 0 18px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  h1{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:clamp(30px,7vw,52px);line-height:.96;letter-spacing:-.01em;text-transform:uppercase}
+  h1 .thin{color:var(--muted);font-weight:600}
+  .sub{color:var(--muted);margin-top:10px;max-width:62ch;font-size:14px}
+  .counts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px}
+  .pill{border:1px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .pill b{color:var(--text)}
+  .pill.swim b{color:var(--swim)} .pill.bike b{color:var(--bike)} .pill.run b{color:var(--run)}
+
+  .toolbar{position:sticky;top:0;z-index:20;background:rgba(14,17,22,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 0}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface)}
+  .seg button{background:transparent;border:0;color:var(--muted);cursor:pointer;font-family:"Saira Condensed",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:13px;padding:8px 14px}
+  .seg button.on{background:var(--accent);color:#06222e}
+  .seg button:not(.on):hover{color:var(--text)}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:10px}
+  .field{display:flex;flex-direction:column;gap:3px}
+  .field label{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding-left:2px}
+  select,input[type=search]{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:"Saira",sans-serif;font-size:13.5px;min-width:128px;appearance:none;cursor:pointer}
+  input[type=search]{cursor:text;min-width:170px}
+  select:focus,input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(56,189,248,.2)}
+  .field.search{flex:1 1 170px}
+  .field.search input{width:100%}
+  .reset{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12.5px;height:37px;font-family:"IBM Plex Mono",monospace}
+  .reset:hover{color:var(--text);border-color:var(--muted)}
+
+  .sortbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px}
+  .sortbar .lbl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-right:2px}
+  .sortchip{background:var(--surface);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:6px 10px;cursor:pointer;font-size:12.5px;font-family:"Saira",sans-serif;display:inline-flex;align-items:center;gap:5px}
+  .sortchip:hover{color:var(--text)}
+  .sortchip.on{border-color:var(--accent);color:var(--text);background:var(--surface2)}
+  .sortchip .arr{font-size:10px;color:var(--accent);width:8px;display:inline-block}
+
+  .meta-row{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 8px;flex-wrap:wrap;gap:8px}
+  .resultcount{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+  .resultcount b{color:var(--text)}
+  .note{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint)}
+
+  .colhead{display:none;grid-template-columns:62px minmax(160px,1fr) 116px 116px 116px 92px;gap:12px;align-items:center;padding:0 14px 8px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .colhead span:nth-child(3){color:var(--swim)}
+  .colhead span:nth-child(4){color:var(--bike)}
+  .colhead span:nth-child(5){color:var(--run)}
+
+  .list{display:flex;flex-direction:column;gap:8px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;display:grid;gap:10px;grid-template-columns:repeat(3,1fr);
+    grid-template-areas:"date date diff" "main main main" "swim bike run";transition:border-color .15s,transform .15s}
+  .card:hover{border-color:#33414f}
+  .c-date{grid-area:date;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .c-date .dnum{color:var(--text);font-weight:500}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.04em;border:1px solid var(--line);border-radius:5px;padding:2px 6px;text-transform:uppercase;color:var(--muted)}
+  .badge.im{border-color:#3a4250;color:#cfd8e3}
+  .badge.h{border-color:#3a3326;color:var(--bike)}
+
+  .c-main{grid-area:main}
+  .rname{font-family:"Saira",sans-serif;font-weight:600;font-size:16.5px;line-height:1.15}
+  .rmeta{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .rmeta .flag{font-size:13px}
+
+  .c-disc{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .c-disc.swim{grid-area:swim}.c-disc.bike{grid-area:bike}.c-disc.run{grid-area:run}
+  .disc-top{display:flex;align-items:center;justify-content:space-between;gap:4px}
+  .disc-key{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .disc-dist{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint)}
+  .glyph{display:block;width:100%;height:26px;border-radius:6px;background:#10151b;border:1px solid var(--line)}
+  .disc-bot{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+  .disc-val{font-family:"Saira",sans-serif;font-weight:600;font-size:12.5px;white-space:nowrap}
+  .swim .disc-val{color:var(--swim)} .bike .disc-val{color:var(--bike)} .run .disc-val{color:var(--run)}
+  .disc-elev{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);white-space:nowrap}
+
+  .c-diff{grid-area:diff;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .diff-lbl{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .meter{display:flex;gap:3px}
+  .meter i{width:8px;height:14px;border-radius:2px;background:#222b35;display:block}
+  .diff-num{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:13px}
+
+  .empty{padding:50px 14px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+  .empty b{color:var(--text);display:block;font-family:"Saira Condensed",sans-serif;font-size:20px;text-transform:uppercase;margin-bottom:6px}
+
+  details.legend{margin-top:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+  details.legend>summary{cursor:pointer;list-style:none;padding:13px 16px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  details.legend>summary::-webkit-details-marker{display:none}
+  details.legend>summary .chev{transition:transform .2s;color:var(--accent)}
+  details.legend[open]>summary .chev{transform:rotate(180deg)}
+  .legend-body{padding:4px 16px 18px;border-top:1px solid var(--line);display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .lg-block h4{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+  .lg-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-size:13px;color:var(--muted)}
+  .lg-row svg{flex:none}
+  .src{margin-top:14px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);line-height:1.6}
+
+  @media(min-width:880px){
+    .colhead{display:grid}
+    .card{grid-template-columns:62px minmax(160px,1fr) 116px 116px 116px 92px;grid-template-areas:"date main swim bike run diff";align-items:center;gap:12px}
+    .c-date{flex-direction:column;align-items:flex-start;gap:6px}
+    .disc-key{display:none}
+    .card:hover{transform:translateY(-1px)}
+  }
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow">Saison 2026 · Nage / Vélo / Course à pied</div>
+    <h1>Courses Ironman<br><span class="thin">&amp; Ironman 70.3</span></h1>
+    <p class="sub">Le profil de chaque course par discipline, avec le dénivelé positif (D+). Triez et filtrez par distance, terrain, type de nage ou difficulté.</p>
+    <div class="counts" id="counts"></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <div class="seg" id="seg">
+      <button data-dist="all" class="on">Toutes</button>
+      <button data-dist="IM">Ironman</button>
+      <button data-dist="70.3">70.3</button>
+    </div>
+    <div class="controls">
+      <div class="field"><label>Continent</label><select id="f-cont"></select></div>
+      <div class="field"><label>Nage</label><select id="f-swim"></select></div>
+      <div class="field"><label>Terrain vélo</label><select id="f-bike"></select></div>
+      <div class="field"><label>Terrain course</label><select id="f-run"></select></div>
+      <div class="field search"><label>Recherche</label><input type="search" id="f-q" placeholder="Ville, pays, nom…"></div>
+      <button class="reset" id="reset">Réinitialiser</button>
+    </div>
+    <div class="sortbar" id="sortbar">
+      <span class="lbl">Trier</span>
+      <button class="sortchip on" data-k="date">Date <span class="arr">↑</span></button>
+      <button class="sortchip" data-k="diff">Difficulté <span class="arr"></span></button>
+      <button class="sortchip" data-k="bike">D+ vélo <span class="arr"></span></button>
+      <button class="sortchip" data-k="run">D+ course <span class="arr"></span></button>
+      <button class="sortchip" data-k="swim">Nage <span class="arr"></span></button>
+      <button class="sortchip" data-k="name">Nom <span class="arr"></span></button>
+      <button class="sortchip" data-k="country">Pays <span class="arr"></span></button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="meta-row">
+    <div class="resultcount" id="rc"></div>
+    <div class="note">~ date à confirmer · D+ indicatif</div>
+  </div>
+
+  <div class="colhead">
+    <span>Date</span><span>Course</span><span>Nage</span><span>Vélo · D+</span><span>Course · D+</span><span>Diff.</span>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <details class="legend">
+    <summary><span>Légende &amp; sources</span><span class="chev">▾</span></summary>
+    <div class="legend-body">
+      <div class="lg-block">
+        <h4>Terrain &amp; dénivelé positif</h4>
+        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-plat"></svg> Plat</div>
+        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-vall"></svg> Vallonné</div>
+        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-mont"></svg> Montagneux</div>
+        <div class="lg-row" style="font-size:11.5px;color:var(--faint)">D+ = mètres de dénivelé positif sur le segment.</div>
+      </div>
+      <div class="lg-block">
+        <h4>Type de nage &amp; distances</h4>
+        <div class="lg-row"><span style="color:var(--swim);font-family:'IBM Plex Mono';font-size:12px">●</span> Lac · Océan · Rivière · Baie · Réservoir</div>
+        <div class="lg-row" style="font-size:12px;color:var(--faint)">Ironman&nbsp;: 3,8 / 180 / 42,2 km</div>
+        <div class="lg-row" style="font-size:12px;color:var(--faint)">70.3&nbsp;: 1,9 / 90 / 21,1 km</div>
+      </div>
+      <div class="lg-block">
+        <h4>Indice de difficulté (1–5)</h4>
+        <div class="lg-row" style="font-size:12.5px">Calculé à partir du terrain vélo (×2), du terrain course (×1,5) et du type de nage. Repère relatif&nbsp;: il n'intègre ni la chaleur, ni le vent, ni l'altitude — Kona ou Lanzarote sont donc plus dures que leur seul profil ne le suggère.</div>
+      </div>
+      <div class="src">
+        Distance complète (43 courses)&nbsp;: calendrier officiel 2026 et profils nage/vélo/course publiés.
+        70.3&nbsp;: ~80 des 119 courses du calendrier 2026.
+        Dénivelé indicatif&nbsp;: valeurs typiques par profil de terrain, arrondies&nbsp;; les parcours de montagne marquants (Lanzarote ≈2&nbsp;551&nbsp;m, Wales ≈2&nbsp;400&nbsp;m, Nice ≈2&nbsp;200&nbsp;m, Lake Placid ≈1&nbsp;830&nbsp;m) reprennent les chiffres communément cités. Variable selon les sources, les éditions et le GPS.
+      </div>
+    </div>
+  </details>
+</div>
+
+<script>
+const T={plat:"Plat",vallonne:"Vallonné",montagneux:"Montagneux"};
+const TO={plat:1,vallonne:2,montagneux:3};
+const CONT={EU:"Europe",NA:"Amérique du Nord",SA:"Amérique du Sud",AS:"Asie",OC:"Océanie",AF:"Afrique"};
+
+/* swim: Lac|Océan|Rivière|Baie|Réservoir ; bike/run: plat|vallonne|montagneux
+   type: IM|70.3 ; bm/rm = override D+ (m) vélo/course ; approx = date à confirmer */
+const R=[
+ // ---------- Ironman (distance complète) ----------
+ {d:"2026-03-07",n:"Ironman New Zealand",city:"Taupō",co:"Nouvelle-Zélande",fl:"🇳🇿",cont:"OC",type:"IM",swim:"Lac",bike:"vallonne",run:"plat"},
+ {d:"2026-04-12",n:"Ironman Penghu",city:"Penghu",co:"Taïwan",fl:"🇹🇼",cont:"AS",type:"IM",swim:"Océan",bike:"vallonne",run:"plat",bm:700},
+ {d:"2026-04-18",n:"Ironman Texas",city:"The Woodlands",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Lac",bike:"plat",run:"vallonne"},
+ {d:"2026-04-19",n:"Ironman Afrique du Sud",city:"Nelson Mandela Bay",co:"Afrique du Sud",fl:"🇿🇦",cont:"AF",type:"IM",swim:"Océan",bike:"vallonne",run:"vallonne",bm:900,approx:true},
+ {d:"2026-05-10",n:"Ironman Vietnam",city:"Da Nang",co:"Vietnam",fl:"🇻🇳",cont:"AS",type:"IM",swim:"Océan",bike:"plat",run:"plat",bm:200},
+ {d:"2026-05-16",n:"Ironman Jacksonville",city:"Jacksonville",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Rivière",bike:"plat",run:"vallonne",bm:250},
+ {d:"2026-05-23",n:"Ironman Lanzarote",city:"Lanzarote",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"IM",swim:"Océan",bike:"montagneux",run:"plat",bm:2551,rm:120},
+ {d:"2026-05-31",n:"Ironman Brésil",city:"Florianópolis",co:"Brésil",fl:"🇧🇷",cont:"SA",type:"IM",swim:"Océan",bike:"vallonne",run:"plat",bm:1300},
+ {d:"2026-06-07",n:"Ironman Hamburg",city:"Hambourg",co:"Allemagne",fl:"🇩🇪",cont:"EU",type:"IM",swim:"Lac",bike:"plat",run:"plat",bm:300},
+ {d:"2026-06-07",n:"Ironman Subic Bay",city:"Subic Bay",co:"Philippines",fl:"🇵🇭",cont:"AS",type:"IM",swim:"Océan",bike:"montagneux",run:"vallonne",bm:1600,rm:200},
+ {d:"2026-06-14",n:"Ironman Cairns",city:"Cairns",co:"Australie",fl:"🇦🇺",cont:"OC",type:"IM",swim:"Océan",bike:"vallonne",run:"plat",bm:700},
+ {d:"2026-06-14",n:"Ironman Klagenfurt",city:"Klagenfurt",co:"Autriche",fl:"🇦🇹",cont:"EU",type:"IM",swim:"Lac",bike:"vallonne",run:"plat",bm:950},
+ {d:"2026-06-14",n:"Ironman Tours – Loire",city:"Tours",co:"France",fl:"🇫🇷",cont:"EU",type:"IM",swim:"Rivière",bike:"plat",run:"plat",bm:300},
+ {d:"2026-06-28",n:"Ironman France",city:"Nice",co:"France",fl:"🇫🇷",cont:"EU",type:"IM",swim:"Océan",bike:"montagneux",run:"plat",bm:2200,rm:40},
+ {d:"2026-06-28",n:"Ironman Frankfurt",city:"Francfort",co:"Allemagne",fl:"🇩🇪",cont:"EU",type:"IM",swim:"Lac",bike:"vallonne",run:"plat",bm:1200},
+ {d:"2026-07-05",n:"Ironman Switzerland",city:"Thoune",co:"Suisse",fl:"🇨🇭",cont:"EU",type:"IM",swim:"Lac",bike:"montagneux",run:"plat",bm:1900,rm:80},
+ {d:"2026-07-12",n:"Ironman Vitoria-Gasteiz",city:"Vitoria",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"IM",swim:"Lac",bike:"vallonne",run:"plat",bm:900},
+ {d:"2026-07-19",n:"Ironman Lake Placid",city:"Lake Placid",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Lac",bike:"montagneux",run:"vallonne",bm:1830,rm:250},
+ {d:"2026-08-02",n:"Ironman Canada – Ottawa",city:"Ottawa",co:"Canada",fl:"🇨🇦",cont:"NA",type:"IM",swim:"Rivière",bike:"vallonne",run:"vallonne",bm:700,rm:200},
+ {d:"2026-08-15",n:"Ironman Kalmar",city:"Kalmar",co:"Suède",fl:"🇸🇪",cont:"EU",type:"IM",swim:"Océan",bike:"plat",run:"plat",bm:250},
+ {d:"2026-08-16",n:"Ironman Leeds",city:"Leeds",co:"Royaume-Uni",fl:"🇬🇧",cont:"EU",type:"IM",swim:"Lac",bike:"montagneux",run:"montagneux",bm:2000,rm:350},
+ {d:"2026-08-16",n:"Ironman Copenhagen",city:"Copenhague",co:"Danemark",fl:"🇩🇰",cont:"EU",type:"IM",swim:"Baie",bike:"vallonne",run:"vallonne",bm:600,rm:150},
+ {d:"2026-08-22",n:"Ironman Tallinn",city:"Tallinn",co:"Estonie",fl:"🇪🇪",cont:"EU",type:"IM",swim:"Baie",bike:"plat",run:"plat",bm:250},
+ {d:"2026-08-23",n:"Ironman Vichy",city:"Vichy",co:"France",fl:"🇫🇷",cont:"EU",type:"IM",swim:"Rivière",bike:"vallonne",run:"plat",bm:700},
+ {d:"2026-09-13",n:"Ironman Wales",city:"Tenby",co:"Royaume-Uni",fl:"🇬🇧",cont:"EU",type:"IM",swim:"Océan",bike:"montagneux",run:"montagneux",bm:2400,rm:500},
+ {d:"2026-09-13",n:"Ironman Wisconsin",city:"Madison",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Lac",bike:"vallonne",run:"montagneux",bm:1700,rm:300},
+ {d:"2026-09-13",n:"Ironman Japan S. Hokkaido",city:"Hokkaidō",co:"Japon",fl:"🇯🇵",cont:"AS",type:"IM",swim:"Océan",bike:"vallonne",run:"plat",bm:900},
+ {d:"2026-09-19",n:"Ironman Italy Emilia-Romagna",city:"Cervia",co:"Italie",fl:"🇮🇹",cont:"EU",type:"IM",swim:"Océan",bike:"plat",run:"plat",bm:250},
+ {d:"2026-09-19",n:"Ironman Maryland",city:"Cambridge",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Rivière",bike:"plat",run:"plat",bm:100},
+ {d:"2026-09-27",n:"Ironman Chattanooga",city:"Chattanooga",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Rivière",bike:"vallonne",run:"vallonne",bm:1100},
+ {d:"2026-10-04",n:"Ironman Calella-Barcelona",city:"Calella",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"IM",swim:"Océan",bike:"plat",run:"plat",bm:600},
+ {d:"2026-10-04",n:"Ironman Gurye Korea",city:"Gurye",co:"Corée du Sud",fl:"🇰🇷",cont:"AS",type:"IM",swim:"Réservoir",bike:"plat",run:"montagneux",bm:350,rm:400},
+ {d:"2026-10-10",n:"Ironman World Championship",city:"Kona",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Océan",bike:"vallonne",run:"vallonne",bm:1500,rm:170},
+ {d:"2026-10-17",n:"Ironman Portugal-Cascais",city:"Cascais",co:"Portugal",fl:"🇵🇹",cont:"EU",type:"IM",swim:"Baie",bike:"vallonne",run:"vallonne",bm:900,rm:200},
+ {d:"2026-10-18",n:"Ironman California",city:"Sacramento",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Rivière",bike:"plat",run:"plat",bm:120},
+ {d:"2026-10-18",n:"Ironman Australia",city:"Port Macquarie",co:"Australie",fl:"🇦🇺",cont:"OC",type:"IM",swim:"Rivière",bike:"vallonne",run:"plat",bm:700},
+ {d:"2026-11-01",n:"Ironman San Juan",city:"San Juan",co:"Argentine",fl:"🇦🇷",cont:"SA",type:"IM",swim:"Réservoir",bike:"montagneux",run:"plat",bm:1800,rm:80},
+ {d:"2026-11-07",n:"Ironman Florida",city:"Panama City Beach",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"IM",swim:"Océan",bike:"plat",run:"plat",bm:150},
+ {d:"2026-11-21",n:"Ironman Malaysia",city:"Langkawi",co:"Malaisie",fl:"🇲🇾",cont:"AS",type:"IM",swim:"Océan",bike:"montagneux",run:"plat",bm:1800,rm:80},
+ {d:"2026-11-22",n:"Ironman Cozumel",city:"Cozumel",co:"Mexique",fl:"🇲🇽",cont:"NA",type:"IM",swim:"Océan",bike:"plat",run:"plat",bm:150},
+ {d:"2026-11-29",n:"Ironman Valdivia",city:"Valdivia",co:"Chili",fl:"🇨🇱",cont:"SA",type:"IM",swim:"Lac",bike:"vallonne",run:"plat",bm:900},
+ {d:"2026-12-05",n:"Ironman Oman",city:"Mascate",co:"Oman",fl:"🇴🇲",cont:"AS",type:"IM",swim:"Océan",bike:"vallonne",run:"plat",bm:800},
+ {d:"2026-12-06",n:"Ironman Western Australia",city:"Busselton",co:"Australie",fl:"🇦🇺",cont:"OC",type:"IM",swim:"Baie",bike:"plat",run:"plat",bm:150},
+
+ // ---------- Ironman 70.3 ----------
+ {d:"2026-02-14",n:"70.3 Muscat",city:"Mascate",co:"Oman",fl:"🇴🇲",cont:"AS",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-02-22",n:"70.3 San Salvador",city:"San Salvador",co:"Salvador",fl:"🇸🇻",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-02-22",n:"70.3 Colombo",city:"Colombo",co:"Sri Lanka",fl:"🇱🇰",cont:"AS",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-03-01",n:"70.3 Monterrey",city:"Monterrey",co:"Mexique",fl:"🇲🇽",cont:"NA",type:"70.3",swim:"Réservoir",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-03-07",n:"70.3 New Zealand",city:"Taupō",co:"Nouvelle-Zélande",fl:"🇳🇿",cont:"OC",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat"},
+ {d:"2026-03-08",n:"70.3 Punta del Este",city:"Punta del Este",co:"Uruguay",fl:"🇺🇾",cont:"SA",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat"},
+ {d:"2026-03-15",n:"70.3 Dallas-Little Elm",city:"Little Elm",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"plat",run:"plat"},
+ {d:"2026-03-22",n:"70.3 Geelong",city:"Geelong",co:"Australie",fl:"🇦🇺",cont:"OC",type:"70.3",swim:"Baie",bike:"vallonne",run:"plat"},
+ {d:"2026-03-28",n:"70.3 Oceanside",city:"Oceanside",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat"},
+ {d:"2026-03-29",n:"70.3 Texas",city:"Galveston",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-04-12",n:"70.3 Puerto Varas",city:"Puerto Varas",co:"Chili",fl:"🇨🇱",cont:"SA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-04-19",n:"70.3 Valencia",city:"Valence",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-04-26",n:"70.3 Brasília",city:"Brasília",co:"Brésil",fl:"🇧🇷",cont:"SA",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-04-26",n:"70.3 Peru",city:"Lima",co:"Pérou",fl:"🇵🇪",cont:"SA",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-04-26",n:"70.3 Los Cabos",city:"Los Cabos",co:"Mexique",fl:"🇲🇽",cont:"NA",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-05-03",n:"70.3 Western Sydney",city:"Penrith",co:"Australie",fl:"🇦🇺",cont:"OC",type:"70.3",swim:"Lac",bike:"plat",run:"plat"},
+ {d:"2026-05-03",n:"70.3 Venice-Jesolo",city:"Jesolo",co:"Italie",fl:"🇮🇹",cont:"EU",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-05-09",n:"70.3 Gulf Coast",city:"Panama City Beach",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-05-09",n:"70.3 Alcúdia-Mallorca",city:"Alcúdia",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat"},
+ {d:"2026-05-10",n:"70.3 Da Nang",city:"Da Nang",co:"Vietnam",fl:"🇻🇳",cont:"AS",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-05-17",n:"70.3 Chattanooga",city:"Chattanooga",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Rivière",bike:"vallonne",run:"vallonne"},
+ {d:"2026-05-17",n:"70.3 Aix-en-Provence",city:"Aix-en-Provence",co:"France",fl:"🇫🇷",cont:"EU",type:"70.3",swim:"Lac",bike:"montagneux",run:"vallonne",bm:1300,rm:200},
+ {d:"2026-05-17",n:"70.3 Shanghai",city:"Shanghai",co:"Chine",fl:"🇨🇳",cont:"AS",type:"70.3",swim:"Lac",bike:"plat",run:"plat",approx:true},
+ {d:"2026-05-24",n:"70.3 Victoria",city:"Victoria",co:"Canada",fl:"🇨🇦",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-05-30",n:"70.3 Hawai'i (Honu)",city:"Kohala",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat"},
+ {d:"2026-05-31",n:"70.3 Kraichgau",city:"Ubstadt-Weiher",co:"Allemagne",fl:"🇩🇪",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne"},
+ {d:"2026-06-07",n:"70.3 Durban",city:"Durban",co:"Afrique du Sud",fl:"🇿🇦",cont:"AF",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-06-07",n:"70.3 Switzerland",city:"Rapperswil-Jona",co:"Suisse",fl:"🇨🇭",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne"},
+ {d:"2026-06-07",n:"70.3 Western Massachusetts",city:"Springfield",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-06-07",n:"70.3 Bolton",city:"Bolton",co:"Royaume-Uni",fl:"🇬🇧",cont:"EU",type:"70.3",swim:"Réservoir",bike:"montagneux",run:"vallonne",bm:1300,rm:220,approx:true},
+ {d:"2026-06-07",n:"70.3 Omaha",city:"Omaha",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat"},
+ {d:"2026-06-07",n:"70.3 Subic Bay",city:"Subic Bay",co:"Philippines",fl:"🇵🇭",cont:"AS",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-06-07",n:"70.3 Alghero",city:"Alghero",co:"Italie",fl:"🇮🇹",cont:"EU",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat"},
+ {d:"2026-06-13",n:"70.3 Boulder",city:"Boulder",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Réservoir",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-06-14",n:"70.3 Eagleman",city:"Cambridge",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Rivière",bike:"plat",run:"plat"},
+ {d:"2026-06-14",n:"70.3 Pennsylvania",city:"Happy Valley",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"montagneux",run:"vallonne"},
+ {d:"2026-06-21",n:"70.3 Elsinore",city:"Elseneur",co:"Danemark",fl:"🇩🇰",cont:"EU",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-06-21",n:"70.3 Coeur d'Alene",city:"Coeur d'Alene",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne"},
+ {d:"2026-06-21",n:"70.3 Westfriesland",city:"Hoorn",co:"Pays-Bas",fl:"🇳🇱",cont:"EU",type:"70.3",swim:"Lac",bike:"plat",run:"plat",approx:true},
+ {d:"2026-06-21",n:"70.3 Mont-Tremblant",city:"Mont-Tremblant",co:"Canada",fl:"🇨🇦",cont:"NA",type:"70.3",swim:"Lac",bike:"montagneux",run:"montagneux",bm:1000,rm:250},
+ {d:"2026-06-28",n:"70.3 Nice",city:"Nice",co:"France",fl:"🇫🇷",cont:"EU",type:"70.3",swim:"Océan",bike:"montagneux",run:"plat",bm:1450,rm:50},
+ {d:"2026-07-05",n:"70.3 Les Sables d'Olonne",city:"Les Sables-d'Olonne",co:"France",fl:"🇫🇷",cont:"EU",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat"},
+ {d:"2026-07-05",n:"70.3 Muskoka",city:"Muskoka",co:"Canada",fl:"🇨🇦",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-07-05",n:"70.3 Sweden",city:"Jönköping",co:"Suède",fl:"🇸🇪",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne"},
+ {d:"2026-07-11",n:"70.3 Muncie",city:"Muncie",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Réservoir",bike:"plat",run:"plat",approx:true},
+ {d:"2026-07-12",n:"70.3 Swansea",city:"Swansea",co:"Royaume-Uni",fl:"🇬🇧",cont:"EU",type:"70.3",swim:"Océan",bike:"montagneux",run:"montagneux",bm:1200,rm:280},
+ {d:"2026-07-12",n:"70.3 Ruidoso",city:"Ruidoso",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"montagneux",run:"vallonne",bm:1200,rm:200,approx:true},
+ {d:"2026-07-12",n:"70.3 Vitoria-Gasteiz",city:"Vitoria",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat"},
+ {d:"2026-07-12",n:"70.3 Musselman",city:"Geneva, NY",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-07-12",n:"70.3 Versailles",city:"Versailles",co:"France",fl:"🇫🇷",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-07-19",n:"70.3 Oregon",city:"Salem",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-07-19",n:"70.3 Ohio",city:"Delaware",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Réservoir",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-07-19",n:"70.3 Ecuador",city:"Manta",co:"Équateur",fl:"🇪🇨",cont:"SA",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-07-25",n:"70.3 Boise",city:"Boise",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Réservoir",bike:"vallonne",run:"plat"},
+ {d:"2026-07-26",n:"70.3 Maine",city:"Augusta, ME",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-08-02",n:"70.3 Krakow",city:"Cracovie",co:"Pologne",fl:"🇵🇱",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-08-09",n:"70.3 Rio de Janeiro",city:"Rio de Janeiro",co:"Brésil",fl:"🇧🇷",cont:"SA",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-08-16",n:"70.3 Northern California",city:"Redding",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-08-16",n:"70.3 Duisburg",city:"Duisburg",co:"Allemagne",fl:"🇩🇪",cont:"EU",type:"70.3",swim:"Lac",bike:"plat",run:"plat",approx:true},
+ {d:"2026-08-16",n:"70.3 Hradec Králové",city:"Hradec Králové",co:"Tchéquie",fl:"🇨🇿",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-08-23",n:"70.3 Tallinn",city:"Tallinn",co:"Estonie",fl:"🇪🇪",cont:"EU",type:"70.3",swim:"Baie",bike:"plat",run:"plat"},
+ {d:"2026-08-23",n:"70.3 Vichy",city:"Vichy",co:"France",fl:"🇫🇷",cont:"EU",type:"70.3",swim:"Lac",bike:"vallonne",run:"plat"},
+ {d:"2026-08-23",n:"70.3 Leipzig",city:"Leipzig",co:"Allemagne",fl:"🇩🇪",cont:"EU",type:"70.3",swim:"Lac",bike:"plat",run:"plat"},
+ {d:"2026-08-30",n:"70.3 Zell am See-Kaprun",city:"Zell am See",co:"Autriche",fl:"🇦🇹",cont:"EU",type:"70.3",swim:"Lac",bike:"montagneux",run:"plat",bm:1100,rm:60},
+ {d:"2026-09-05",n:"70.3 Baku",city:"Bakou",co:"Azerbaïdjan",fl:"🇦🇿",cont:"AS",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-09-06",n:"70.3 Knokke-Heist",city:"Knokke-Heist",co:"Belgique",fl:"🇧🇪",cont:"EU",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-09-12",n:"70.3 World Championship",city:"Nice",co:"France",fl:"🇫🇷",cont:"EU",type:"70.3",swim:"Océan",bike:"montagneux",run:"plat",bm:1450,rm:50},
+ {d:"2026-09-13",n:"70.3 Santa Cruz",city:"Santa Cruz",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Océan",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-09-13",n:"70.3 Erkner",city:"Erkner",co:"Allemagne",fl:"🇩🇪",cont:"EU",type:"70.3",swim:"Lac",bike:"plat",run:"plat",approx:true},
+ {d:"2026-09-20",n:"70.3 Italy Emilia-Romagna",city:"Cervia",co:"Italie",fl:"🇮🇹",cont:"EU",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-09-20",n:"70.3 Weymouth",city:"Weymouth",co:"Royaume-Uni",fl:"🇬🇧",cont:"EU",type:"70.3",swim:"Océan",bike:"vallonne",run:"vallonne",approx:true},
+ {d:"2026-09-20",n:"70.3 Cozumel",city:"Cozumel",co:"Mexique",fl:"🇲🇽",cont:"NA",type:"70.3",swim:"Océan",bike:"plat",run:"plat"},
+ {d:"2026-09-20",n:"70.3 Washington Tri-Cities",city:"Richland",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Rivière",bike:"plat",run:"plat",approx:true},
+ {d:"2026-09-26",n:"70.3 New York-Jones Beach",city:"New York",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Océan",bike:"plat",run:"plat",approx:true},
+ {d:"2026-09-27",n:"70.3 Augusta",city:"Augusta, GA",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Rivière",bike:"vallonne",run:"plat"},
+ {d:"2026-10-04",n:"70.3 Waco",city:"Waco",co:"États-Unis",fl:"🇺🇸",cont:"NA",type:"70.3",swim:"Rivière",bike:"plat",run:"plat",approx:true},
+ {d:"2026-10-18",n:"70.3 Port Macquarie",city:"Port Macquarie",co:"Australie",fl:"🇦🇺",cont:"OC",type:"70.3",swim:"Rivière",bike:"vallonne",run:"plat",approx:true},
+ {d:"2026-10-24",n:"70.3 Málaga",city:"Málaga",co:"Espagne",fl:"🇪🇸",cont:"EU",type:"70.3",swim:"Océan",bike:"montagneux",run:"vallonne",bm:1100,rm:200,approx:true},
+ {d:"2026-12-06",n:"70.3 Buenos Aires",city:"Buenos Aires",co:"Argentine",fl:"🇦🇷",cont:"SA",type:"70.3",swim:"Rivière",bike:"plat",run:"plat",approx:true}
+];
+
+/* ---------- Helpers ---------- */
+const SWIMMOD={"Océan":1,"Baie":0.5,"Lac":0,"Rivière":0,"Réservoir":0};
+const BIKE_DEF={IM:{plat:400,vallonne:1100,montagneux:2000},"70.3":{plat:250,vallonne:600,montagneux:1100}};
+const RUN_DEF ={IM:{plat:80, vallonne:220, montagneux:450}, "70.3":{plat:40, vallonne:130, montagneux:300}};
+function bikeM(r){return r.bm!=null?r.bm:BIKE_DEF[r.type][r.bike];}
+function runM(r){return r.rm!=null?r.rm:RUN_DEF[r.type][r.run];}
+function diffScore(r){return TO[r.bike]*2 + TO[r.run]*1.5 + (SWIMMOD[r.swim]||0);}
+function diffLevel(r){const s=diffScore(r);return Math.max(1,Math.min(5,Math.round(1+4*(s-3.5)/8)));}
+function distFor(r,disc){const im=r.type==="IM";if(disc==="swim")return im?"3,8 km":"1,9 km";if(disc==="bike")return im?"180 km":"90 km";return im?"42,2 km":"21,1 km";}
+function fmtM(m){return (""+m).replace(/\B(?=(\d{3})+(?!\d))/g,"\u202f")+" m";}
+const MONTHS=["jan","fév","mar","avr","mai","juin","juil","aoû","sep","oct","nov","déc"];
+function fmtDate(iso){const p=iso.split("-").map(Number);return p[2]+" "+MONTHS[p[1]-1];}
+
+const PATHS={
+  plat:"M0 24 L0 18.5 L8 18 L16 17.5 L24 18 L32 17.5 L40 18 L48 17.5 L56 18 L64 17.8 L64 24 Z",
+  vallonne:"M0 24 L0 16 L8 11.5 L16 15.5 L24 10.5 L32 15.5 L40 11 L48 15.5 L56 11.5 L64 15 L64 24 Z",
+  montagneux:"M0 24 L0 15 L8 5.5 L16 13 L24 4 L32 12 L40 5 L48 13.5 L56 6 L64 12.5 L64 24 Z"
+};
+const LINE={
+  plat:"M0 18.5 L8 18 L16 17.5 L24 18 L32 17.5 L40 18 L48 17.5 L56 18 L64 17.8",
+  vallonne:"M0 16 L8 11.5 L16 15.5 L24 10.5 L32 15.5 L40 11 L48 15.5 L56 11.5 L64 15",
+  montagneux:"M0 15 L8 5.5 L16 13 L24 4 L32 12 L40 5 L48 13.5 L56 6 L64 12.5"
+};
+function terrainGlyph(terr,color){
+  return '<svg class="glyph" viewBox="0 0 64 24" preserveAspectRatio="none" aria-hidden="true">'+
+    '<path d="'+PATHS[terr]+'" fill="'+color+'" fill-opacity="0.16"/>'+
+    '<path d="'+LINE[terr]+'" fill="none" stroke="'+color+'" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+function swimGlyph(color){
+  return '<svg class="glyph" viewBox="0 0 64 24" preserveAspectRatio="none" aria-hidden="true">'+
+    '<path d="M0 10 Q8 5 16 10 T32 10 T48 10 T64 10" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>'+
+    '<path d="M0 16 Q8 11 16 16 T32 16 T48 16 T64 16" fill="none" stroke="'+color+'" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>';
+}
+const C={swim:"#38BDF8",bike:"#FBBF24",run:"#FB7185"};
+
+let state={dist:"all",cont:"",swim:"",bike:"",run:"",q:"",sort:"date",dir:1};
+
+function uniq(a){return [...new Set(a)];}
+function fillSelect(id,opts,allLabel){
+  const s=document.getElementById(id);
+  s.innerHTML='<option value="">'+allLabel+'</option>'+opts.map(o=>'<option value="'+o.v+'">'+o.t+'</option>').join("");
+}
+fillSelect("f-cont",Object.keys(CONT).filter(k=>uniq(R.map(r=>r.cont)).includes(k)).map(k=>({v:k,t:CONT[k]})),"Tous");
+fillSelect("f-swim",uniq(R.map(r=>r.swim)).sort().map(s=>({v:s,t:s})),"Toutes");
+fillSelect("f-bike",["plat","vallonne","montagneux"].map(k=>({v:k,t:T[k]})),"Tous");
+fillSelect("f-run",["plat","vallonne","montagneux"].map(k=>({v:k,t:T[k]})),"Tous");
+
+function passes(r){
+  if(state.dist!=="all" && r.type!==state.dist) return false;
+  if(state.cont && r.cont!==state.cont) return false;
+  if(state.swim && r.swim!==state.swim) return false;
+  if(state.bike && r.bike!==state.bike) return false;
+  if(state.run && r.run!==state.run) return false;
+  if(state.q){const q=state.q.toLowerCase();if(!(r.n+" "+r.city+" "+r.co).toLowerCase().includes(q)) return false;}
+  return true;
+}
+const SWIMORD={"Lac":1,"Réservoir":2,"Rivière":3,"Baie":4,"Océan":5};
+function sortKey(r){
+  switch(state.sort){
+    case"date":return r.d;
+    case"diff":return diffScore(r);
+    case"bike":return bikeM(r);
+    case"run":return runM(r);
+    case"swim":return SWIMORD[r.swim]||0;
+    case"name":return r.n.toLowerCase();
+    case"country":return r.co.toLowerCase();
+  }
+}
+function render(){
+  const rows=R.filter(passes).sort((a,b)=>{
+    let ka=sortKey(a),kb=sortKey(b);
+    if(ka<kb)return -1*state.dir;
+    if(ka>kb)return 1*state.dir;
+    return a.d<b.d?-1:1;
+  });
+  const list=document.getElementById("list");
+  if(!rows.length){
+    list.innerHTML='<div class="empty"><b>Aucune course</b>Modifiez les filtres ou réinitialisez la recherche.</div>';
+  }else{
+    list.innerHTML=rows.map(cardHTML).join("");
+  }
+  document.getElementById("rc").innerHTML='<b>'+rows.length+'</b> course'+(rows.length>1?'s':'')+' affichée'+(rows.length>1?'s':'');
+}
+function meterHTML(lvl){
+  const col=lvl<=2?"var(--easy)":lvl===3?"var(--mid)":"var(--hard)";
+  let s='<div class="meter">';
+  for(let i=1;i<=5;i++) s+='<i style="'+(i<=lvl?'background:'+col:'')+'"></i>';
+  return s+'</div>';
+}
+function discCell(cls,key,label,glyph,dist,elev){
+  const e = elev!=null ? '<span class="disc-elev">D+ '+fmtM(elev)+'</span>' : '';
+  return '<div class="c-disc '+cls+'">'+
+    '<div class="disc-top"><span class="disc-key">'+key+'</span><span class="disc-dist">'+dist+'</span></div>'+
+    glyph+
+    '<div class="disc-bot"><span class="disc-val">'+label+'</span>'+e+'</div></div>';
+}
+function cardHTML(r){
+  const lvl=diffLevel(r);
+  const dcol=lvl<=2?'var(--easy)':lvl===3?'var(--mid)':'var(--hard)';
+  const badge=r.type==="IM"?'<span class="badge im">140.6</span>':'<span class="badge h">70.3</span>';
+  return '<div class="card">'+
+    '<div class="c-date">'+badge+'<span class="dnum">'+(r.approx?"~":"")+fmtDate(r.d)+'</span></div>'+
+    '<div class="c-main"><div class="rname">'+r.n+'</div>'+
+      '<div class="rmeta"><span class="flag">'+r.fl+'</span> '+r.city+' · '+r.co+' · '+CONT[r.cont]+'</div></div>'+
+    discCell("swim","Nage",r.swim,swimGlyph(C.swim),distFor(r,"swim"),null)+
+    discCell("bike","Vélo",T[r.bike],terrainGlyph(r.bike,C.bike),distFor(r,"bike"),bikeM(r))+
+    discCell("run","Course",T[r.run],terrainGlyph(r.run,C.run),distFor(r,"run"),runM(r))+
+    '<div class="c-diff"><span class="diff-lbl">Diff.</span>'+meterHTML(lvl)+
+      '<span class="diff-num" style="color:'+dcol+'">'+lvl+'/5</span></div>'+
+  '</div>';
+}
+
+function buildCounts(){
+  const im=R.filter(r=>r.type==="IM").length, h=R.filter(r=>r.type==="70.3").length;
+  document.getElementById("counts").innerHTML=
+    '<span class="pill"><b>'+R.length+'</b> courses</span>'+
+    '<span class="pill"><b>'+im+'</b> Ironman</span>'+
+    '<span class="pill"><b>'+h+'</b> Ironman 70.3</span>'+
+    '<span class="pill swim">Nage <b>●</b></span>'+
+    '<span class="pill bike">Vélo <b>●</b></span>'+
+    '<span class="pill run">Course <b>●</b></span>';
+}
+
+document.getElementById("seg").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  [...e.currentTarget.children].forEach(x=>x.classList.remove("on"));
+  b.classList.add("on");state.dist=b.dataset.dist;render();
+});
+document.getElementById("f-cont").addEventListener("change",e=>{state.cont=e.target.value;render();});
+document.getElementById("f-swim").addEventListener("change",e=>{state.swim=e.target.value;render();});
+document.getElementById("f-bike").addEventListener("change",e=>{state.bike=e.target.value;render();});
+document.getElementById("f-run").addEventListener("change",e=>{state.run=e.target.value;render();});
+document.getElementById("f-q").addEventListener("input",e=>{state.q=e.target.value;render();});
+document.getElementById("reset").addEventListener("click",()=>{
+  state={dist:"all",cont:"",swim:"",bike:"",run:"",q:"",sort:"date",dir:1};
+  document.querySelectorAll("#seg button").forEach((b,i)=>b.classList.toggle("on",i===0));
+  ["f-cont","f-swim","f-bike","f-run"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("f-q").value="";
+  syncSort();render();
+});
+document.getElementById("sortbar").addEventListener("click",e=>{
+  const b=e.target.closest(".sortchip");if(!b)return;
+  const k=b.dataset.k;
+  if(state.sort===k){state.dir*=-1;}else{state.sort=k;state.dir=(k==="name"||k==="country"||k==="date")?1:-1;}
+  syncSort();render();
+});
+function syncSort(){
+  document.querySelectorAll(".sortchip").forEach(c=>{
+    const on=c.dataset.k===state.sort;
+    c.classList.toggle("on",on);
+    c.querySelector(".arr").textContent=on?(state.dir===1?"↑":"↓"):"";
+  });
+}
+function paintLegend(){
+  document.getElementById("lg-plat").innerHTML='<path d="'+PATHS.plat+'" fill="#8A97A6" fill-opacity="0.18"/><path d="'+LINE.plat+'" fill="none" stroke="#C7D0DA" stroke-width="1.6" stroke-linecap="round"/>';
+  document.getElementById("lg-vall").innerHTML='<path d="'+PATHS.vallonne+'" fill="#8A97A6" fill-opacity="0.18"/><path d="'+LINE.vallonne+'" fill="none" stroke="#C7D0DA" stroke-width="1.6" stroke-linecap="round"/>';
+  document.getElementById("lg-mont").innerHTML='<path d="'+PATHS.montagneux+'" fill="#8A97A6" fill-opacity="0.18"/><path d="'+LINE.montagneux+'" fill="none" stroke="#C7D0DA" stroke-width="1.6" stroke-linecap="round"/>';
+}
+
+buildCounts();syncSort();paintLegend();render();
+</script>
+</body>
+</html>

@@ -3,170 +3,383 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#1B1035">
 <title>Répertoire des courses longue distance — 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&family=Saira+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0E1116; --surface:#161B22; --surface2:#1B222B; --line:#262E38;
-    --text:#E7EDF4; --muted:#8A97A6; --faint:#5C6773;
-    --swim:#38BDF8; --bike:#FBBF24; --run:#FB7185;
-    --easy:#34D399; --mid:#FBBF24; --hard:#F43F5E;
-    --accent:#38BDF8;
-    --im:#38BDF8; --ch:#A78BFA; --ind:#4ADE80;
+    --bg:#1B1035;
+    --text:#F3EEFF; --muted:#B2A6D6; --faint:#8578AD;
+    --acc:#8B6BF0; --acc2:#3FD8C8; --accSoft:#B9A5FF;
+
+    /* épaisseurs de verre — la hiérarchie tient à ça, pas à la couleur */
+    --g1:rgba(255,255,255,.06);   /* film mince : fiches */
+    --g2:rgba(255,255,255,.10);   /* verre moyen : panneaux */
+    --g3:rgba(255,255,255,.14);   /* verre épais : chrome flottant */
+    --lip:rgba(255,255,255,.22);  /* lèvre lumineuse en haut du verre */
+    --edge:rgba(255,255,255,.13);
+    --shade:0 10px 34px rgba(12,5,34,.42);
+
+    --swim:#5CD6E0; --bike:#E9B96B; --run:#E58AA8;
+    --im:#A98CFF; --ch:#3FD8C8; --xt:#FF9E5C; --ind:#FF8FB8;
+    --easy:#3FD8C8; --mid:#E9B96B; --hard:#FF7A8A;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
-  body{background:var(--bg);color:var(--text);font-family:"Saira",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.4;padding-bottom:48px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 14px}
+  body{
+    min-height:100%;
+    color:var(--text);
+    font-family:"Inter",system-ui,-apple-system,sans-serif;
+    font-size:15px;line-height:1.5;font-weight:400;
+    padding-bottom:56px;-webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(70vw 60vw at 12% 0%,  rgba(139,107,240,.30), transparent 64%),
+      radial-gradient(60vw 55vw at 88% 96%, rgba(214,104,186,.20), transparent 62%),
+      var(--bg);
+    background-attachment:fixed;
+  }
+  /* grille de points animée : la seule couche en mouvement de la page */
+  #bgdots{position:fixed;inset:0;z-index:-1;pointer-events:none;display:block}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+  ::selection{background:rgba(139,107,240,.45);color:#fff}
 
-  header.mast{padding:26px 0 18px;border-bottom:1px solid var(--line)}
-  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-  h1{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:clamp(28px,6.5vw,50px);line-height:.96;letter-spacing:-.01em;text-transform:uppercase}
+  /* ---------- Verre ---------- */
+  .glass{
+    background:linear-gradient(180deg, var(--g3), rgba(255,255,255,.07));
+    backdrop-filter:blur(26px) saturate(150%);
+    -webkit-backdrop-filter:blur(26px) saturate(150%);
+    box-shadow:var(--shade), inset 0 1px 0 var(--lip);
+    border-radius:20px;
+  }
+
+  /* ---------- En-tête ---------- */
+  header.mast{padding:22px 0 26px}
+  .toprow{display:flex;justify-content:flex-end;margin-bottom:22px}
+  .langsel{
+    display:inline-flex;gap:2px;padding:3px;border-radius:12px;
+    background:var(--g2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    box-shadow:inset 0 1px 0 var(--lip), 0 4px 16px rgba(12,5,34,.3);
+  }
+  .langsel button{
+    background:transparent;border:0;border-radius:9px;cursor:pointer;
+    font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.08em;
+    color:var(--faint);padding:6px 10px;line-height:1;
+    transition:color .16s ease, background .16s ease;
+  }
+  .langsel button:hover{color:var(--text)}
+  .langsel button.on{background:rgba(255,255,255,.16);color:var(--text);box-shadow:inset 0 1px 0 var(--lip)}
+
+  .eyebrow{
+    font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accSoft);margin-bottom:14px;
+  }
+  h1{
+    font-weight:700;font-size:clamp(36px,8.4vw,68px);line-height:.94;
+    letter-spacing:-.035em;
+  }
   h1 .thin{color:var(--muted);font-weight:600}
-  .sub{color:var(--muted);margin-top:10px;max-width:64ch;font-size:14px}
-  .counts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11px}
-  .pill{border:1px solid var(--line);border-radius:999px;padding:5px 11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-  .pill b{color:var(--text)}
-  .pill.k-IM b{color:var(--im)} .pill.k-CH b{color:var(--ch)} .pill.k-IND b{color:var(--ind)}
+  .sub{color:var(--muted);margin-top:16px;max-width:62ch;font-size:15px;line-height:1.6}
 
-  .toolbar{position:sticky;top:0;z-index:30;background:rgba(14,17,22,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 0}
-  .segrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface)}
-  .seg button{background:transparent;border:0;color:var(--muted);cursor:pointer;font-family:"Saira Condensed",sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:13px;padding:8px 13px}
-  .seg button.on{background:var(--accent);color:#06222e}
-  .seg.view button.on{background:var(--text);color:#0E1116}
-  .seg button:not(.on):hover{color:var(--text)}
+  .counts{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+  .pill{
+    border-radius:999px;padding:7px 14px;font-size:12px;font-weight:500;color:var(--muted);
+    background:var(--g1);box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+    font-variant-numeric:tabular-nums;
+  }
+  .pill b{color:var(--text);font-weight:600}
+  .pill.k-IM b{color:var(--im)} .pill.k-CH b{color:var(--ch)}
+  .pill.k-XT b{color:var(--xt)} .pill.k-IND b{color:var(--ind)}
 
-  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:10px}
-  .field{display:flex;flex-direction:column;gap:3px}
-  .field label{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding-left:2px}
-  select,input[type=search]{background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-family:"Saira",sans-serif;font-size:13.5px;min-width:124px;appearance:none;cursor:pointer}
-  input[type=search]{cursor:text;min-width:160px}
-  select:focus,input:focus,button:focus-visible,a:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(56,189,248,.35)}
-  .field.search{flex:1 1 160px}
+  /* ---------- Barre d'outils : le verre le plus épais ---------- */
+  .toolbar{
+    position:sticky;top:10px;z-index:30;margin-bottom:8px;
+    padding:14px 16px;border-radius:22px;
+    background:linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.08));
+    backdrop-filter:blur(30px) saturate(160%);
+    -webkit-backdrop-filter:blur(30px) saturate(160%);
+    box-shadow:var(--shade), inset 0 1px 0 var(--lip);
+  }
+  .segrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .seg{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+  .seg button{
+    background:transparent;border:0;border-radius:9px;color:var(--muted);cursor:pointer;
+    font-family:inherit;font-weight:600;font-size:13px;padding:8px 15px;line-height:1;
+    transition:color .16s ease, background .16s ease;
+  }
+  .seg button:hover{color:var(--text)}
+  .seg button.on{background:rgba(139,107,240,.55);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.28)}
+  .seg.view button.on{background:rgba(255,255,255,.20);color:var(--text)}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:12px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{
+    font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--faint);padding-left:3px;
+  }
+  select,input[type=search]{
+    background:rgba(255,255,255,.09);color:var(--text);border:0;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+    border-radius:11px;padding:10px 12px;font-family:inherit;font-size:13.5px;font-weight:500;
+    min-width:132px;appearance:none;cursor:pointer;
+  }
+  select option{background:#241748;color:var(--text)}
+  input[type=search]{cursor:text;min-width:170px}
+  input[type=search]::placeholder{color:var(--faint)}
+  select:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{
+    outline:2px solid var(--acc2);outline-offset:2px;
+  }
+  .field.search{flex:1 1 170px}
   .field.search input{width:100%}
-  .reset{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:12.5px;height:37px;font-family:"IBM Plex Mono",monospace}
-  .reset:hover{color:var(--text);border-color:var(--muted)}
+  .reset{
+    background:rgba(255,255,255,.06);border:0;color:var(--muted);border-radius:11px;
+    padding:10px 14px;cursor:pointer;font-size:12.5px;font-weight:500;font-family:inherit;height:39px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);transition:color .16s ease,background .16s ease;
+  }
+  .reset:hover{color:var(--text);background:rgba(255,255,255,.11)}
 
-  .sortbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px}
-  .sortbar .lbl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-right:2px}
-  .sortchip{background:var(--surface);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:6px 10px;cursor:pointer;font-size:12.5px;font-family:"Saira",sans-serif;display:inline-flex;align-items:center;gap:5px}
-  .sortchip:hover{color:var(--text)}
-  .sortchip.on{border-color:var(--accent);color:var(--text);background:var(--surface2)}
-  .sortchip .arr{font-size:10px;color:var(--accent);width:8px;display:inline-block}
+  .sortbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:12px}
+  .sortbar .lbl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-right:3px}
+  .sortchip{
+    background:rgba(255,255,255,.06);border:0;color:var(--muted);border-radius:10px;
+    padding:7px 12px;cursor:pointer;font-size:12.5px;font-weight:500;font-family:inherit;
+    display:inline-flex;align-items:center;gap:6px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.10);transition:color .16s ease,background .16s ease;
+  }
+  .sortchip:hover{color:var(--text);background:rgba(255,255,255,.10)}
+  .sortchip.on{background:rgba(63,216,200,.18);color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,.20)}
+  .sortchip .arr{font-size:10px;color:var(--acc2);width:8px;display:inline-block}
 
-  .meta-row{display:flex;justify-content:space-between;align-items:baseline;margin:18px 0 8px;flex-wrap:wrap;gap:8px}
-  .resultcount{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
-  .resultcount b{color:var(--text)}
-  .note{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint)}
+  .meta-row{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 12px;flex-wrap:wrap;gap:8px;padding:0 4px}
+  .resultcount{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .resultcount b{color:var(--text);font-weight:700}
+  .note{font-size:11.5px;color:var(--faint)}
 
-  /* ---- Map ---- */
-  .mapwrap{position:relative;border:1px solid var(--line);border-radius:12px;background:#0B0F14;overflow:hidden}
-  .mapwrap svg.world{display:block;width:100%;height:auto;touch-action:manipulation}
-  .land{fill:#1A212A;stroke:#2B3541;stroke-width:1;vector-effect:non-scaling-stroke}
-  .grat{stroke:#20272F;stroke-width:1;fill:none;vector-effect:non-scaling-stroke}
-  .pt{cursor:pointer;stroke:#0B0F14;stroke-width:1.2;vector-effect:non-scaling-stroke}
-  .pt:hover,.pt.sel{stroke:#fff;stroke-width:2}
-  .maplegend{position:absolute;left:10px;bottom:10px;display:flex;gap:10px;flex-wrap:wrap;background:rgba(14,17,22,.82);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted)}
-  .maplegend span{display:inline-flex;align-items:center;gap:5px}
-  .maplegend i{width:8px;height:8px;border-radius:50%;display:inline-block}
-  .maphint{position:absolute;right:10px;top:10px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);background:rgba(14,17,22,.82);border:1px solid var(--line);border-radius:8px;padding:5px 9px}
-  .maptip{position:absolute;pointer-events:none;z-index:9;opacity:0;visibility:hidden;
-    background:rgba(20,25,32,.97);border:1px solid #33414f;border-radius:9px;padding:8px 10px;
-    max-width:230px;box-shadow:0 8px 24px rgba(0,0,0,.55);transition:opacity .12s ease}
-  .maptip.on{opacity:1;visibility:visible}
-  .maptip .tt-n{font-family:"Saira",sans-serif;font-weight:600;font-size:13px;line-height:1.2;display:flex;align-items:center;gap:6px}
-  .maptip .tt-n i{width:7px;height:7px;border-radius:50%;flex:none}
-  .maptip .tt-m{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.5}
-  .maptip .tt-m b{color:var(--text);font-weight:500}
-  .maptip .tt-go{font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--faint);margin-top:5px;letter-spacing:.06em;text-transform:uppercase}
-  .mapctl{position:absolute;right:10px;bottom:10px;display:flex;flex-direction:column;gap:5px;z-index:5}
-  .mapctl button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:rgba(14,17,22,.9);color:var(--text);font-size:16px;line-height:1;cursor:pointer;font-family:"Saira",sans-serif;display:flex;align-items:center;justify-content:center}
-  .mapctl button:hover{border-color:var(--accent);color:var(--accent)}
-  .mapwrap svg.world{cursor:grab}
+  /* ---------- Carte : le geste signature ---------- */
+  .mapwrap{
+    position:relative;border-radius:22px;overflow:hidden;
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:var(--shade), inset 0 1px 0 var(--lip);
+  }
+  .mapwrap svg.world{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
   .mapwrap svg.world.drag{cursor:grabbing}
-  .links{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
-  .links a{font-family:"IBM Plex Mono",monospace;font-size:10.5px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--muted);white-space:nowrap}
-  .links a:hover{color:var(--accent);border-color:var(--accent)}
-  .links a.primary{color:var(--text)}
-  .popup{margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:none}
-  .popup.on{display:block}
-  .popup h3{font-family:"Saira Condensed",sans-serif;font-size:15px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-  .popup .close{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:6px;cursor:pointer;font-size:11px;padding:3px 8px;font-family:"IBM Plex Mono",monospace}
-  .plist{display:flex;flex-direction:column;gap:8px}
+  /* continents en verre dépoli, océans laissant passer la lumière du fond */
+  .land{fill:rgba(255,255,255,.085);stroke:rgba(255,255,255,.20);stroke-width:1;vector-effect:non-scaling-stroke}
+  .grat{stroke:rgba(255,255,255,.07);stroke-width:1;fill:none;vector-effect:non-scaling-stroke}
+  .pt{cursor:pointer;stroke:rgba(27,16,53,.85);stroke-width:1.2;vector-effect:non-scaling-stroke;transition:stroke .15s ease}
+  .pt:hover,.pt.sel{stroke:#fff;stroke-width:2.4}
 
-  /* ---- Cards ---- */
-  .list{display:flex;flex-direction:column;gap:8px}
-  .colhead{display:none;grid-template-columns:70px minmax(160px,1fr) 112px 112px 112px 86px;gap:12px;align-items:center;padding:0 14px 8px;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .maplegend{
+    position:absolute;left:12px;bottom:12px;display:flex;gap:12px;flex-wrap:wrap;
+    padding:8px 12px;border-radius:13px;font-size:11px;font-weight:500;color:var(--muted);
+    background:rgba(27,16,53,.42);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+  }
+  .maplegend span{display:inline-flex;align-items:center;gap:6px}
+  .maplegend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .maphint{
+    position:absolute;right:12px;top:12px;font-size:11px;font-weight:500;color:var(--muted);
+    padding:7px 12px;border-radius:13px;
+    background:rgba(27,16,53,.42);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16);
+  }
+  .mapctl{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px;z-index:5}
+  .mapctl button{
+    width:36px;height:36px;border-radius:12px;border:0;color:var(--text);
+    background:rgba(27,16,53,.46);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+    font-size:17px;line-height:1;cursor:pointer;font-family:inherit;
+    display:flex;align-items:center;justify-content:center;transition:background .16s ease;
+  }
+  .mapctl button:hover{background:rgba(139,107,240,.55)}
+
+  /* infobulle : le verre le plus épais de la page */
+  .maptip{
+    position:absolute;pointer-events:none;z-index:9;opacity:0;visibility:hidden;
+    max-width:250px;padding:11px 13px;border-radius:16px;
+    background:rgba(41,26,80,.62);
+    backdrop-filter:blur(34px) saturate(170%);-webkit-backdrop-filter:blur(34px) saturate(170%);
+    box-shadow:0 14px 40px rgba(10,4,30,.55), inset 0 1px 0 rgba(255,255,255,.26);
+    transition:opacity .14s ease;
+  }
+  .maptip.on{opacity:1;visibility:visible}
+  .maptip .tt-n{font-weight:700;font-size:13.5px;line-height:1.25;display:flex;align-items:center;gap:7px;letter-spacing:-.01em}
+  .maptip .tt-n i{width:8px;height:8px;border-radius:50%;flex:none}
+  .maptip .tt-m{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.6;font-variant-numeric:tabular-nums}
+  .maptip .tt-m b{color:var(--text);font-weight:600}
+  .maptip .tt-go{font-size:10px;font-weight:600;color:var(--acc2);margin-top:8px;letter-spacing:.06em}
+
+  .popup{
+    margin-top:12px;padding:16px;border-radius:22px;display:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+    backdrop-filter:blur(28px) saturate(150%);-webkit-backdrop-filter:blur(28px) saturate(150%);
+    box-shadow:var(--shade), inset 0 1px 0 var(--lip);
+  }
+  .popup.on{display:block}
+  .popup h3{
+    font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--muted);
+    margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  .popup .close{
+    background:rgba(255,255,255,.09);border:0;color:var(--muted);border-radius:10px;cursor:pointer;
+    font-size:11.5px;font-weight:500;padding:6px 12px;font-family:inherit;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14);
+  }
+  .popup .close:hover{color:var(--text);background:rgba(255,255,255,.14)}
+  .plist{display:flex;flex-direction:column;gap:10px}
+
+  /* ---------- Fiches : film de verre mince ---------- */
+  .colhead{
+    display:none;grid-template-columns:74px minmax(140px,1fr) 150px 150px 150px 70px;
+    gap:13px;align-items:center;padding:0 18px 10px;
+    font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
+  }
   .colhead span:nth-child(3){color:var(--swim)}
   .colhead span:nth-child(4){color:var(--bike)}
   .colhead span:nth-child(5){color:var(--run)}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:13px 14px;display:grid;gap:10px;grid-template-columns:repeat(3,1fr);
-    grid-template-areas:"date date diff" "main main main" "swim bike run";transition:border-color .15s,transform .15s;border-left:3px solid var(--line)}
-  .card:hover{border-color:#33414f}
-  .card.s-IM{border-left-color:var(--im)} .card.s-CH{border-left-color:var(--ch)} .card.s-IND{border-left-color:var(--ind)}
-  .card.flash{border-color:var(--accent);box-shadow:0 0 0 2px rgba(56,189,248,.25)}
-  .c-date{grid-area:date;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-  .c-date .dnum{color:var(--text);font-weight:500}
-  .badge{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.04em;border:1px solid var(--line);border-radius:5px;padding:2px 6px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  .badge.F{border-color:#3a4250;color:#cfd8e3}
-  .badge.H{border-color:#3a3326;color:var(--bike)}
-  .c-main{grid-area:main}
-  .rname{font-family:"Saira",sans-serif;font-weight:600;font-size:16.5px;line-height:1.15}
-  .serie{font-family:"IBM Plex Mono",monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;padding:1px 5px;border-radius:4px;margin-left:6px;vertical-align:middle;white-space:nowrap}
-  .serie.IM{color:var(--im);background:rgba(56,189,248,.12)}
-  .serie.CH{color:var(--ch);background:rgba(167,139,250,.14)}
-  .serie.IND{color:var(--ind);background:rgba(74,222,128,.12)}
-  .rmeta{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .rmeta .flag{font-size:13px}
-  .c-disc{display:flex;flex-direction:column;gap:4px;min-width:0}
-  .c-disc.swim{grid-area:swim}.c-disc.bike{grid-area:bike}.c-disc.run{grid-area:run}
-  .disc-top{display:flex;align-items:center;justify-content:space-between;gap:4px}
-  .disc-key{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-  .disc-dist{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint)}
-  .glyph{display:block;width:100%;height:26px;border-radius:6px;background:#10151b;border:1px solid var(--line)}
-  .disc-bot{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
-  .disc-val{font-family:"Saira",sans-serif;font-weight:600;font-size:12.5px;white-space:nowrap}
-  .swim .disc-val{color:var(--swim)} .bike .disc-val{color:var(--bike)} .run .disc-val{color:var(--run)}
-  .disc-elev{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);white-space:nowrap}
-  .c-diff{grid-area:diff;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-  .diff-lbl{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-  .meter{display:flex;gap:3px}
-  .meter i{width:8px;height:14px;border-radius:2px;background:#222b35;display:block}
-  .diff-num{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:13px}
-  .empty{padding:50px 14px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
-  .empty b{color:var(--text);display:block;font-family:"Saira Condensed",sans-serif;font-size:20px;text-transform:uppercase;margin-bottom:6px}
 
-  details.legend{margin-top:22px;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
-  details.legend>summary{cursor:pointer;list-style:none;padding:13px 16px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
-  details.legend>summary::-webkit-details-marker{display:none}
-  details.legend>summary .chev{transition:transform .2s;color:var(--accent)}
-  details.legend[open]>summary .chev{transform:rotate(180deg)}
-  .legend-body{padding:4px 16px 18px;border-top:1px solid var(--line);display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-  .lg-block h4{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
-  .lg-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-size:13px;color:var(--muted)}
-  .lg-row svg{flex:none}
-  .src{margin-top:14px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint);line-height:1.6;grid-column:1/-1}
-
-  @media(min-width:880px){
-    .colhead{display:grid}
-    .card{grid-template-columns:70px minmax(160px,1fr) 112px 112px 112px 86px;grid-template-areas:"date main swim bike run diff";align-items:center;gap:12px}
-    .c-date{flex-direction:column;align-items:flex-start;gap:6px}
-    .disc-key{display:none}
-    .card:hover{transform:translateY(-1px)}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .card{
+    position:relative;border-radius:18px;padding:15px 17px;display:grid;gap:12px;
+    grid-template-columns:repeat(3,1fr);
+    grid-template-areas:"date date diff" "main main main" "swim bike run";
+    background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05)), rgba(38,24,74,.62);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 4px 18px rgba(12,5,34,.22);
+    transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
   }
-  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .card:hover{
+    background:linear-gradient(180deg, rgba(255,255,255,.15), rgba(255,255,255,.07)), rgba(46,29,88,.60);
+    box-shadow:inset 0 1px 0 var(--lip), 0 10px 30px rgba(12,5,34,.36);
+  }
+  /* la série se lit à un liseré lumineux, pas à une bordure */
+  .card::before{
+    content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:0 3px 3px 0;
+    background:var(--sc,transparent);box-shadow:0 0 14px 0 var(--sc,transparent);opacity:.9;
+  }
+  .card.s-IM{--sc:var(--im)} .card.s-CH{--sc:var(--ch)}
+  .card.s-XT{--sc:var(--xt)} .card.s-IND{--sc:var(--ind)}
+
+  .c-date{grid-area:date;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+  .c-date .dnum{color:var(--text);font-weight:600}
+  .badge{
+    font-size:10px;font-weight:600;letter-spacing:.05em;border-radius:7px;padding:4px 8px;
+    color:var(--muted);background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.14);white-space:nowrap;
+  }
+  .badge.F{color:var(--text)}
+  .badge.H{color:var(--muted)}
+
+  .c-main{grid-area:main;min-width:0}
+  .rname{font-weight:700;font-size:17px;line-height:1.2;letter-spacing:-.015em}
+  .serie{
+    font-size:10px;font-weight:600;letter-spacing:.06em;padding:3px 7px;border-radius:7px;
+    margin-left:8px;vertical-align:middle;white-space:nowrap;
+  }
+  .serie.IM{color:var(--im);background:rgba(169,140,255,.20)}
+  .serie.CH{color:var(--ch);background:rgba(63,216,200,.16)}
+  .serie.XT{color:var(--xt);background:rgba(255,158,92,.18)}
+  .serie.IND{color:var(--ind);background:rgba(255,143,184,.16)}
+  .rmeta{font-size:12px;color:var(--muted);margin-top:5px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .rmeta .flag{font-size:14px}
+
+  .links{display:flex;gap:8px;align-items:center;margin-top:9px;flex-wrap:wrap}
+  .links a{
+    font-size:11px;font-weight:500;text-decoration:none;border-radius:8px;padding:5px 10px;
+    color:var(--muted);background:rgba(255,255,255,.07);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12);white-space:nowrap;transition:color .16s,background .16s;
+  }
+  .links a:hover{color:var(--text);background:rgba(139,107,240,.42)}
+  .links a.primary{color:var(--text)}
+
+  .c-disc{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .c-disc.swim{grid-area:swim}.c-disc.bike{grid-area:bike}.c-disc.run{grid-area:run}
+  .disc-top{display:flex;align-items:center;justify-content:space-between;gap:5px}
+  .disc-key{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .disc-dist{font-size:10.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .glyph{
+    display:block;width:100%;height:28px;border-radius:9px;
+    background:rgba(255,255,255,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  }
+  .disc-bot{display:flex;align-items:baseline;justify-content:space-between;gap:7px;flex-wrap:wrap}
+  .disc-val{font-weight:600;font-size:11.5px;letter-spacing:-.01em;white-space:nowrap}
+  .swim .disc-val{color:var(--swim)} .bike .disc-val{color:var(--bike)} .run .disc-val{color:var(--run)}
+  .disc-elev{font-size:10px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;margin-left:auto}
+
+  .c-diff{grid-area:diff;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .diff-lbl{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .meter{display:flex;gap:3px}
+  .meter i{width:9px;height:15px;border-radius:3px;background:rgba(255,255,255,.10);display:block}
+  .diff-num{font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+
+  .empty{
+    padding:60px 20px;text-align:center;color:var(--muted);border-radius:20px;
+    background:rgba(255,255,255,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .empty b{color:var(--text);display:block;font-size:20px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+
+  /* ---------- Légende ---------- */
+  details.legend{
+    margin-top:26px;border-radius:20px;overflow:hidden;
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 6px 22px rgba(12,5,34,.24);
+  }
+  details.legend>summary{
+    cursor:pointer;list-style:none;padding:16px 20px;
+    font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  details.legend>summary::-webkit-details-marker{display:none}
+  details.legend>summary .chev{transition:transform .22s ease;color:var(--acc2)}
+  details.legend[open]>summary .chev{transform:rotate(180deg)}
+  .legend-body{padding:6px 20px 22px;display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+  .lg-block h4{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:11px}
+  .lg-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px;color:var(--muted);line-height:1.55}
+  .lg-row svg{flex:none}
+  .src{margin-top:6px;font-size:11.5px;color:var(--faint);line-height:1.75;grid-column:1/-1}
+  .src b{color:var(--muted);font-weight:600}
+
+  /* ---------- Grand écran ---------- */
+  @media(min-width:900px){
+    .colhead{display:grid}
+    .card{
+      grid-template-columns:74px minmax(140px,1fr) 150px 150px 150px 70px;
+      grid-template-areas:"date main swim bike run diff";
+      align-items:center;gap:14px;
+    }
+    .c-date{flex-direction:column;align-items:flex-start;gap:8px}
+    .disc-key{display:none}
+    .diff-lbl{display:none}
+    .card:hover{transform:translateY(-2px)}
+  }
+  /* sous 900px la barre de filtres est trop haute pour rester collée */
+  @media(max-width:899px){
+    .toolbar{position:static;padding:13px 14px}
+    .wrap{padding:0 12px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
 </style>
 </head>
 <body>
+<canvas id="bgdots" aria-hidden="true"></canvas>
 
 <header class="mast">
   <div class="wrap">
-    <div class="eyebrow">Saison 2026 · Longue &amp; moyenne distance · Toutes séries</div>
-    <h1>Répertoire<br><span class="thin">des courses</span></h1>
-    <p class="sub">Ironman, Ironman 70.3, Challenge Family et épreuves indépendantes. Profil nage / vélo / course avec dénivelé, en liste triable ou sur carte.</p>
+    <div class="toprow">
+      <div class="langsel" id="seglang" role="group" aria-label="Langue">
+        <button data-lg="fr" class="on">FR</button>
+        <button data-lg="en">EN</button>
+        <button data-lg="de">DE</button>
+        <button data-lg="es">ES</button>
+      </div>
+    </div>
+    <div class="eyebrow" data-i="eyebrow"></div>
+    <h1><span data-i="h1a"></span><br><span class="thin" data-i="h1b"></span></h1>
+    <p class="sub" data-i="sub"></p>
     <div class="counts" id="counts"></div>
   </div>
 </header>
@@ -175,34 +388,34 @@
   <div class="wrap">
     <div class="segrow">
       <div class="seg view" id="segview">
-        <button data-view="list" class="on">Liste</button>
-        <button data-view="map">Carte</button>
+        <button data-view="list" class="on" data-i="vList"></button>
+        <button data-view="map" data-i="vMap"></button>
       </div>
       <div class="seg" id="segdist">
-        <button data-t="all" class="on">Toutes</button>
-        <button data-t="H">Moyenne</button>
-        <button data-t="F">Longue</button>
+        <button data-t="all" class="on" data-i="dAll"></button>
+        <button data-t="H" data-i="dMid"></button>
+        <button data-t="F" data-i="dLong"></button>
       </div>
     </div>
     <div class="controls">
-      <div class="field"><label>Mois</label><select id="f-mois"></select></div>
-      <div class="field"><label>Série</label><select id="f-serie"></select></div>
-      <div class="field"><label>Continent</label><select id="f-cont"></select></div>
-      <div class="field"><label>Nage</label><select id="f-swim"></select></div>
-      <div class="field"><label>Terrain vélo</label><select id="f-bike"></select></div>
-      <div class="field"><label>Terrain course</label><select id="f-run"></select></div>
-      <div class="field search"><label>Recherche</label><input type="search" id="f-q" placeholder="Ville, pays, nom…"></div>
-      <button class="reset" id="reset">Réinitialiser</button>
+      <div class="field"><label data-i="lMonth"></label><select id="f-mois"></select></div>
+      <div class="field"><label data-i="lSerie"></label><select id="f-serie"></select></div>
+      <div class="field"><label data-i="lCont"></label><select id="f-cont"></select></div>
+      <div class="field"><label data-i="lSwim"></label><select id="f-swim"></select></div>
+      <div class="field"><label data-i="lBike"></label><select id="f-bike"></select></div>
+      <div class="field"><label data-i="lRun"></label><select id="f-run"></select></div>
+      <div class="field search"><label data-i="lSearch"></label><input type="search" id="f-q" data-ip="phSearch"></div>
+      <button class="reset" id="reset" data-i="reset"></button>
     </div>
     <div class="sortbar" id="sortbar">
-      <span class="lbl">Trier</span>
-      <button class="sortchip on" data-k="date">Date <span class="arr">↑</span></button>
-      <button class="sortchip" data-k="diff">Difficulté <span class="arr"></span></button>
-      <button class="sortchip" data-k="bike">D+ vélo <span class="arr"></span></button>
-      <button class="sortchip" data-k="run">D+ course <span class="arr"></span></button>
-      <button class="sortchip" data-k="swim">Nage <span class="arr"></span></button>
-      <button class="sortchip" data-k="name">Nom <span class="arr"></span></button>
-      <button class="sortchip" data-k="country">Pays <span class="arr"></span></button>
+      <span class="lbl" data-i="sort"></span>
+      <button class="sortchip on" data-k="date"><span data-i="sDate"></span><span class="arr">↑</span></button>
+      <button class="sortchip" data-k="diff"><span data-i="sDiff"></span><span class="arr"></span></button>
+      <button class="sortchip" data-k="bike"><span data-i="sBike"></span><span class="arr"></span></button>
+      <button class="sortchip" data-k="run"><span data-i="sRun"></span><span class="arr"></span></button>
+      <button class="sortchip" data-k="swim"><span data-i="sSwim"></span><span class="arr"></span></button>
+      <button class="sortchip" data-k="name"><span data-i="sName"></span><span class="arr"></span></button>
+      <button class="sortchip" data-k="country"><span data-i="sCountry"></span><span class="arr"></span></button>
     </div>
   </div>
 </div>
@@ -210,7 +423,7 @@
 <div class="wrap">
   <div class="meta-row">
     <div class="resultcount" id="rc"></div>
-    <div class="note">~ date à confirmer · D+ indicatif</div>
+    <div class="note" data-i="note"></div>
   </div>
 
   <div id="mapview" style="display:none">
@@ -226,64 +439,227 @@
         <button id="z-out" aria-label="Zoom arrière">−</button>
         <button id="z-reset" aria-label="Réinitialiser la vue">⤾</button>
       </div>
-      <div class="maphint">Survoler pour un aperçu · cliquer pour la fiche</div>
+      <div class="maphint" data-i="mapHint"></div>
       <div class="maplegend">
         <span><i style="background:var(--im)"></i>Ironman</span>
         <span><i style="background:var(--ch)"></i>Challenge</span>
-        <span><i style="background:var(--ind)"></i>Indépendante</span>
-        <span>● grand = longue distance</span>
+        <span><i style="background:var(--xt)"></i>XTRI</span>
+        <span><i style="background:var(--ind)"></i><span data-iS="IND"></span></span>
+        <span data-i="mapBig"></span>
       </div>
     </div>
     <div class="popup" id="popup">
-      <h3><span id="popup-title">Course</span><button class="close" id="popup-close">Fermer</button></h3>
+      <h3><span id="popup-title">Course</span><button class="close" id="popup-close" data-i="close"></button></h3>
       <div class="plist" id="popup-list"></div>
     </div>
   </div>
 
   <div id="listview">
     <div class="colhead">
-      <span>Date</span><span>Course</span><span>Nage</span><span>Vélo · D+</span><span>Course · D+</span><span>Diff.</span>
+      <span data-i="hDate"></span><span data-i="hRace"></span><span data-i="hSwim"></span><span data-i="hBike"></span><span data-i="hRun"></span><span data-i="hDiff"></span>
     </div>
     <div class="list" id="list"></div>
   </div>
 
   <details class="legend">
-    <summary><span>Légende &amp; sources</span><span class="chev">▾</span></summary>
+    <summary><span data-i="legend"></span><span class="chev">▾</span></summary>
     <div class="legend-body">
       <div class="lg-block">
-        <h4>Terrain &amp; dénivelé</h4>
-        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-plat"></svg> Plat</div>
-        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-vall"></svg> Vallonné</div>
-        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-mont"></svg> Montagneux</div>
-        <div class="lg-row" style="font-size:11.5px;color:var(--faint)">D+ = mètres de dénivelé positif sur le segment.</div>
+        <h4 data-i="lgTerr"></h4>
+        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-plat"></svg><span data-iT="plat"></span></div>
+        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-vall"></svg><span data-iT="vallonne"></span></div>
+        <div class="lg-row"><svg width="48" height="20" viewBox="0 0 64 24" id="lg-mont"></svg><span data-iT="montagneux"></span></div>
+        <div class="lg-row" style="font-size:11.5px;color:var(--faint)" data-i="lgDplus"></div>
       </div>
       <div class="lg-block">
-        <h4>Distances</h4>
-        <div class="lg-row"><span class="badge F">Longue</span> 3,8 / 180 / 42,2 km</div>
-        <div class="lg-row"><span class="badge H">Moyenne</span> 1,9 / 90 / 21,1 km</div>
-        <div class="lg-row" style="font-size:11.5px;color:var(--faint)">Les épreuves extrêmes (Norseman, Embrunman, Celtman, Alpe d'Huez…) ont des distances propres, affichées telles quelles sur leur fiche.</div>
+        <h4 data-i="lgDist"></h4>
+        <div class="lg-row"><span class="badge F" data-i="dLong"></span> 3,8 / 180 / 42,2 km</div>
+        <div class="lg-row"><span class="badge H" data-i="dMid"></span> 1,9 / 90 / 21,1 km</div>
+        <div class="lg-row" style="font-size:11.5px;color:var(--faint)" data-i="lgExtreme"></div>
       </div>
       <div class="lg-block">
-        <h4>Indice de difficulté (1–5)</h4>
-        <div class="lg-row" style="font-size:12.5px">Terrain vélo (×2) + terrain course (×1,5) + type de nage. Repère relatif&nbsp;: il n'intègre ni la chaleur, ni le vent, ni l'altitude — Kona ou Lanzarote sont plus dures que leur seul profil ne le suggère.</div>
+        <h4 data-i="lgDiff"></h4>
+        <div class="lg-row" style="font-size:12.5px" data-i="lgDiffTxt"></div>
       </div>
-      <div class="src">
-        <b>Ironman / 70.3</b>&nbsp;: calendrier officiel 2026 (43 longues distances) et ~79 des 119 épreuves 70.3, profils nage/vélo/course tels que publiés.
-        <b>Challenge Family</b>&nbsp;: calendrier européen officiel 2026 complet + principales épreuves hors Europe.
-        <b>Indépendantes</b>&nbsp;: sélection d'épreuves reconnues (Embrunman, Norseman, Celtman, Swissman, Patagonman, Outlaw, Alpe d'Huez…) — les dates de cette catégorie sont indicatives et à vérifier auprès de l'organisateur.
-        <b>Dénivelé</b>&nbsp;: valeurs typiques par profil de terrain, sauf pour les parcours de montagne documentés (Lanzarote ≈2&nbsp;551&nbsp;m, Wales ≈2&nbsp;400&nbsp;m, Nice ≈2&nbsp;200&nbsp;m, Embrunman ≈5&nbsp;000&nbsp;m, Norseman ≈3&nbsp;000&nbsp;m). Variable selon les sources, les éditions et le GPS.
-        Fond de carte&nbsp;: Natural Earth (domaine public), projection équirectangulaire.
-      </div>
+      <div class="src"><span data-i="srcIM"></span> <span data-i="srcCH"></span> <span data-i="srcXT"></span> <span data-i="srcIND"></span> <span data-i="srcElev"></span> <span data-i="srcMap"></span></div>
     </div>
   </details>
 </div>
 
 <script>
-const T={plat:"Plat",vallonne:"Vallonné",montagneux:"Montagneux"};
+/* ---------------- i18n ---------------- */
+const I18N={
+fr:{
+ htmlLang:"fr", title:"Répertoire des courses longue distance — 2026",
+ eyebrow:"Saison 2026 · Longue & moyenne distance · Toutes séries",
+ h1a:"Répertoire", h1b:"des courses",
+ sub:"Ironman, Ironman 70.3, Challenge Family, XTRI World Tour et épreuves indépendantes. Profil nage / vélo / course avec dénivelé, en liste triable ou sur carte.",
+ races:"courses", longD:"longue distance", midD:"moyenne distance",
+ vList:"Liste", vMap:"Carte",
+ dAll:"Toutes", dMid:"Moyenne", dLong:"Longue",
+ lMonth:"Mois", lSerie:"Série", lCont:"Continent", lSwim:"Nage", lBike:"Terrain vélo", lRun:"Terrain course", lSearch:"Recherche",
+ phSearch:"Ville, pays, nom…", reset:"Réinitialiser",
+ allF:"Tous", allFe:"Toutes",
+ sort:"Trier", sDate:"Date", sDiff:"Difficulté", sBike:"D+ vélo", sRun:"D+ course", sSwim:"Nage", sName:"Nom", sCountry:"Pays",
+ shown1:"course affichée", shownN:"courses affichées",
+ note:"~ date à confirmer · D+ indicatif",
+ hDate:"Date", hRace:"Course", hSwim:"Nage", hBike:"Vélo · D+", hRun:"Course · D+", hDiff:"Diff.",
+ kSwim:"Nage", kBike:"Vélo", kRun:"Course", diff:"Diff.",
+ emptyT:"Aucune course", emptyS:"Modifiez les filtres ou réinitialisez la recherche.",
+ site:"Site officiel", search:"Rechercher",
+ mapHint:"Survoler pour un aperçu · cliquer pour la fiche",
+ mapBig:"● grand = longue distance", close:"Fermer",
+ ttGo:"Cliquer pour la fiche", ttMore1:"autre course ici", ttMoreN:"autres courses ici",
+ legend:"Légende & sources",
+ lgTerr:"Terrain & dénivelé", lgDist:"Distances", lgDiff:"Indice de difficulté (1–5)",
+ lgDplus:"D+ = mètres de dénivelé positif sur le segment.",
+ lgExtreme:"Les épreuves extrêmes (Norseman, Embrunman, Celtman, Alpe d'Huez…) ont des distances propres, affichées telles quelles sur leur fiche.",
+ lgDiffTxt:"Terrain vélo (×2) + terrain course (×1,5) + type de nage. Repère relatif : il n'intègre ni la chaleur, ni le vent, ni l'altitude — Kona ou Lanzarote sont plus dures que leur seul profil ne le suggère.",
+ srcIM:"<b>Ironman</b> : les 43 longues distances du calendrier officiel 2026 et 81 des 119 épreuves 70.3.",
+ srcCH:"<b>Challenge Family</b> : calendrier européen officiel 2026 et principales épreuves hors Europe.",
+ srcXT:"<b>XTRI World Tour</b> : circuit des triathlons extrêmes né du Norseman, aux distances calées sur le relief, avec équipe d'assistance obligatoire sur les épreuves longues.",
+ srcIND:"<b>Indépendantes</b> : épreuves hors circuit. Les dates XTRI et indépendantes sont indicatives et à vérifier auprès de l'organisateur.",
+ srcElev:"<b>Dénivelé</b> : valeurs typiques par profil de terrain, sauf pour les parcours documentés. Variable selon les sources, les éditions et le GPS.",
+ srcMap:"Fond de carte : Natural Earth (domaine public), projection équirectangulaire.",
+ months:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
+ mAbbr:["jan","fév","mar","avr","mai","juin","juil","aoû","sep","oct","nov","déc"],
+ terr:{plat:"Plat",vallonne:"Vallonné",montagneux:"Montagneux"},
+ swim:{"Lac":"Lac","Océan":"Océan","Rivière":"Rivière","Baie":"Baie","Réservoir":"Réservoir","Fjord":"Fjord"},
+ cont:{EU:"Europe",NA:"Amérique du Nord",SA:"Amérique du Sud",AS:"Asie",OC:"Océanie",AF:"Afrique"},
+ serie:{IM:"Ironman",CH:"Challenge",XT:"XTRI",IND:"Indépendante"},
+ co:{}
+},
+en:{
+ htmlLang:"en", title:"Long-distance race directory — 2026",
+ eyebrow:"2026 season · Full & half distance · All series",
+ h1a:"Race", h1b:"directory",
+ sub:"Ironman, Ironman 70.3, Challenge Family, XTRI World Tour and independent events. Swim / bike / run profile with elevation gain, as a sortable list or on a map.",
+ races:"races", longD:"full distance", midD:"half distance",
+ vList:"List", vMap:"Map",
+ dAll:"All", dMid:"Half", dLong:"Full",
+ lMonth:"Month", lSerie:"Series", lCont:"Continent", lSwim:"Swim", lBike:"Bike terrain", lRun:"Run terrain", lSearch:"Search",
+ phSearch:"City, country, name…", reset:"Reset",
+ allF:"All", allFe:"All",
+ sort:"Sort", sDate:"Date", sDiff:"Difficulty", sBike:"Bike gain", sRun:"Run gain", sSwim:"Swim", sName:"Name", sCountry:"Country",
+ shown1:"race shown", shownN:"races shown",
+ note:"~ date to be confirmed · elevation indicative",
+ hDate:"Date", hRace:"Race", hSwim:"Swim", hBike:"Bike · gain", hRun:"Run · gain", hDiff:"Diff.",
+ kSwim:"Swim", kBike:"Bike", kRun:"Run", diff:"Diff.",
+ emptyT:"No races", emptyS:"Adjust the filters or reset your search.",
+ site:"Official site", search:"Search",
+ mapHint:"Hover for a preview · click for the full card",
+ mapBig:"● large = full distance", close:"Close",
+ ttGo:"Click for the full card", ttMore1:"other race here", ttMoreN:"other races here",
+ legend:"Legend & sources",
+ lgTerr:"Terrain & elevation", lgDist:"Distances", lgDiff:"Difficulty index (1–5)",
+ lgDplus:"Gain = metres of elevation gain on that leg.",
+ lgExtreme:"Extreme events (Norseman, Embrunman, Celtman, Alpe d'Huez…) use their own distances, shown as such on each card.",
+ lgDiffTxt:"Bike terrain (×2) + run terrain (×1.5) + swim type. A relative guide only: it ignores heat, wind and altitude — Kona and Lanzarote are harder than their profile alone suggests.",
+ srcIM:"<b>Ironman</b>: all 43 full-distance races from the official 2026 calendar, plus 81 of the 119 Ironman 70.3 events.",
+ srcCH:"<b>Challenge Family</b>: official 2026 European calendar plus the main races outside Europe.",
+ srcXT:"<b>XTRI World Tour</b>: the extreme triathlon circuit born from Norseman, with distances set by the terrain and a mandatory support crew on full-distance races.",
+ srcIND:"<b>Independent</b>: events outside any circuit. XTRI and independent dates are indicative — check with the organiser.",
+ srcElev:"<b>Elevation</b>: typical values per terrain profile, except where the course is documented. Varies by source, edition and GPS device.",
+ srcMap:"Base map: Natural Earth (public domain), equirectangular projection.",
+ months:["January","February","March","April","May","June","July","August","September","October","November","December"],
+ mAbbr:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+ terr:{plat:"Flat",vallonne:"Rolling",montagneux:"Hilly"},
+ swim:{"Lac":"Lake","Océan":"Ocean","Rivière":"River","Baie":"Bay","Réservoir":"Reservoir","Fjord":"Fjord"},
+ cont:{EU:"Europe",NA:"North America",SA:"South America",AS:"Asia",OC:"Oceania",AF:"Africa"},
+ serie:{IM:"Ironman",CH:"Challenge",XT:"XTRI",IND:"Independent"},
+ co:{"Afrique du Sud":"South Africa","Allemagne":"Germany","Argentine":"Argentina","Australie":"Australia","Autriche":"Austria","Azerbaïdjan":"Azerbaijan","Belgique":"Belgium","Brésil":"Brazil","Canada":"Canada","Chili":"Chile","Chine":"China","Corée du Sud":"South Korea","Croatie":"Croatia","Danemark":"Denmark","Espagne":"Spain","Estonie":"Estonia","Finlande":"Finland","France":"France","Israël":"Israel","Italie":"Italy","Japon":"Japan","Luxembourg":"Luxembourg","Malaisie":"Malaysia","Mexique":"Mexico","Norvège":"Norway","Nouvelle-Zélande":"New Zealand","Oman":"Oman","Pays-Bas":"Netherlands","Philippines":"Philippines","Pologne":"Poland","Portugal":"Portugal","Pérou":"Peru","Royaume-Uni":"United Kingdom","Salvador":"El Salvador","Slovaquie":"Slovakia","Sri Lanka":"Sri Lanka","Suisse":"Switzerland","Suède":"Sweden","Taïwan":"Taiwan","Tchéquie":"Czechia","Uruguay":"Uruguay","Vietnam":"Vietnam","Équateur":"Ecuador","États-Unis":"United States"}
+},
+de:{
+ htmlLang:"de", title:"Verzeichnis der Langdistanzrennen — 2026",
+ eyebrow:"Saison 2026 · Lang- & Mitteldistanz · Alle Serien",
+ h1a:"Rennen", h1b:"verzeichnis",
+ sub:"Ironman, Ironman 70.3, Challenge Family, XTRI World Tour und unabhängige Rennen. Schwimm-, Rad- und Laufprofil mit Höhenmetern, als sortierbare Liste oder auf der Karte.",
+ races:"Rennen", longD:"Langdistanz", midD:"Mitteldistanz",
+ vList:"Liste", vMap:"Karte",
+ dAll:"Alle", dMid:"Mittel", dLong:"Lang",
+ lMonth:"Monat", lSerie:"Serie", lCont:"Kontinent", lSwim:"Schwimmen", lBike:"Radprofil", lRun:"Laufprofil", lSearch:"Suche",
+ phSearch:"Stadt, Land, Name…", reset:"Zurücksetzen",
+ allF:"Alle", allFe:"Alle",
+ sort:"Sortieren", sDate:"Datum", sDiff:"Schwierigkeit", sBike:"Hm Rad", sRun:"Hm Lauf", sSwim:"Schwimmen", sName:"Name", sCountry:"Land",
+ shown1:"Rennen angezeigt", shownN:"Rennen angezeigt",
+ note:"~ Datum unbestätigt · Höhenmeter ungefähr",
+ hDate:"Datum", hRace:"Rennen", hSwim:"Schwimmen", hBike:"Rad · Hm", hRun:"Lauf · Hm", hDiff:"Schw.",
+ kSwim:"Schwimmen", kBike:"Rad", kRun:"Lauf", diff:"Schw.",
+ emptyT:"Keine Rennen", emptyS:"Filter anpassen oder Suche zurücksetzen.",
+ site:"Offizielle Seite", search:"Suchen",
+ mapHint:"Zeigen für Vorschau · klicken für Details",
+ mapBig:"● groß = Langdistanz", close:"Schließen",
+ ttGo:"Klicken für Details", ttMore1:"weiteres Rennen hier", ttMoreN:"weitere Rennen hier",
+ legend:"Legende & Quellen",
+ lgTerr:"Profil & Höhenmeter", lgDist:"Distanzen", lgDiff:"Schwierigkeitsindex (1–5)",
+ lgDplus:"Hm = positive Höhenmeter auf diesem Abschnitt.",
+ lgExtreme:"Extremrennen (Norseman, Embrunman, Celtman, Alpe d'Huez…) haben eigene Distanzen, die auf der Karte so angezeigt werden.",
+ lgDiffTxt:"Radprofil (×2) + Laufprofil (×1,5) + Schwimmart. Nur ein relativer Anhaltspunkt: Hitze, Wind und Höhe fließen nicht ein — Kona und Lanzarote sind härter, als ihr Profil vermuten lässt.",
+ srcIM:"<b>Ironman</b>: alle 43 Langdistanzen des offiziellen Kalenders 2026 sowie 81 der 119 Ironman-70.3-Rennen.",
+ srcCH:"<b>Challenge Family</b>: offizieller Europakalender 2026 und die wichtigsten Rennen außerhalb Europas.",
+ srcXT:"<b>XTRI World Tour</b>: die aus dem Norseman entstandene Extremtriathlon-Serie, mit vom Gelände bestimmten Distanzen und Pflicht-Begleitteam auf der Langdistanz.",
+ srcIND:"<b>Unabhängig</b>: Rennen außerhalb jeder Serie. Termine von XTRI und unabhängigen Rennen sind Richtwerte — beim Veranstalter prüfen.",
+ srcElev:"<b>Höhenmeter</b>: typische Werte je Geländeprofil, außer bei dokumentierten Strecken. Je nach Quelle, Austragung und GPS unterschiedlich.",
+ srcMap:"Kartengrundlage: Natural Earth (gemeinfrei), Plattkarte.",
+ months:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
+ mAbbr:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],
+ terr:{plat:"Flach",vallonne:"Wellig",montagneux:"Bergig"},
+ swim:{"Lac":"See","Océan":"Ozean","Rivière":"Fluss","Baie":"Bucht","Réservoir":"Stausee","Fjord":"Fjord"},
+ cont:{EU:"Europa",NA:"Nordamerika",SA:"Südamerika",AS:"Asien",OC:"Ozeanien",AF:"Afrika"},
+ serie:{IM:"Ironman",CH:"Challenge",XT:"XTRI",IND:"Unabhängig"},
+ co:{"Afrique du Sud":"Südafrika","Allemagne":"Deutschland","Argentine":"Argentinien","Australie":"Australien","Autriche":"Österreich","Azerbaïdjan":"Aserbaidschan","Belgique":"Belgien","Brésil":"Brasilien","Canada":"Kanada","Chili":"Chile","Chine":"China","Corée du Sud":"Südkorea","Croatie":"Kroatien","Danemark":"Dänemark","Espagne":"Spanien","Estonie":"Estland","Finlande":"Finnland","France":"Frankreich","Israël":"Israel","Italie":"Italien","Japon":"Japan","Luxembourg":"Luxemburg","Malaisie":"Malaysia","Mexique":"Mexiko","Norvège":"Norwegen","Nouvelle-Zélande":"Neuseeland","Oman":"Oman","Pays-Bas":"Niederlande","Philippines":"Philippinen","Pologne":"Polen","Portugal":"Portugal","Pérou":"Peru","Royaume-Uni":"Vereinigtes Königreich","Salvador":"El Salvador","Slovaquie":"Slowakei","Sri Lanka":"Sri Lanka","Suisse":"Schweiz","Suède":"Schweden","Taïwan":"Taiwan","Tchéquie":"Tschechien","Uruguay":"Uruguay","Vietnam":"Vietnam","Équateur":"Ecuador","États-Unis":"USA"}
+},
+es:{
+ htmlLang:"es", title:"Directorio de carreras de larga distancia — 2026",
+ eyebrow:"Temporada 2026 · Larga y media distancia · Todas las series",
+ h1a:"Directorio", h1b:"de carreras",
+ sub:"Ironman, Ironman 70.3, Challenge Family, XTRI World Tour y pruebas independientes. Perfil de natación, ciclismo y carrera con desnivel, en lista ordenable o sobre el mapa.",
+ races:"carreras", longD:"larga distancia", midD:"media distancia",
+ vList:"Lista", vMap:"Mapa",
+ dAll:"Todas", dMid:"Media", dLong:"Larga",
+ lMonth:"Mes", lSerie:"Serie", lCont:"Continente", lSwim:"Natación", lBike:"Terreno ciclismo", lRun:"Terreno carrera", lSearch:"Búsqueda",
+ phSearch:"Ciudad, país, nombre…", reset:"Restablecer",
+ allF:"Todos", allFe:"Todas",
+ sort:"Ordenar", sDate:"Fecha", sDiff:"Dificultad", sBike:"Desnivel bici", sRun:"Desnivel carrera", sSwim:"Natación", sName:"Nombre", sCountry:"País",
+ shown1:"carrera mostrada", shownN:"carreras mostradas",
+ note:"~ fecha por confirmar · desnivel orientativo",
+ hDate:"Fecha", hRace:"Carrera", hSwim:"Natación", hBike:"Bici · desnivel", hRun:"Carrera · desnivel", hDiff:"Dific.",
+ kSwim:"Natación", kBike:"Bici", kRun:"Carrera", diff:"Dific.",
+ emptyT:"Ninguna carrera", emptyS:"Ajusta los filtros o restablece la búsqueda.",
+ site:"Sitio oficial", search:"Buscar",
+ mapHint:"Pasa el cursor para ver un resumen · haz clic para la ficha",
+ mapBig:"● grande = larga distancia", close:"Cerrar",
+ ttGo:"Haz clic para la ficha", ttMore1:"otra carrera aquí", ttMoreN:"otras carreras aquí",
+ legend:"Leyenda y fuentes",
+ lgTerr:"Terreno y desnivel", lgDist:"Distancias", lgDiff:"Índice de dificultad (1–5)",
+ lgDplus:"Desnivel = metros de desnivel positivo en ese segmento.",
+ lgExtreme:"Las pruebas extremas (Norseman, Embrunman, Celtman, Alpe d'Huez…) tienen distancias propias, mostradas tal cual en su ficha.",
+ lgDiffTxt:"Terreno de ciclismo (×2) + terreno de carrera (×1,5) + tipo de natación. Referencia relativa: no incluye el calor, el viento ni la altitud — Kona y Lanzarote son más duras de lo que sugiere su perfil.",
+ srcIM:"<b>Ironman</b>: las 43 largas distancias del calendario oficial 2026 y 81 de las 119 pruebas Ironman 70.3.",
+ srcCH:"<b>Challenge Family</b>: calendario europeo oficial 2026 y las principales pruebas fuera de Europa.",
+ srcXT:"<b>XTRI World Tour</b>: el circuito de triatlones extremos nacido del Norseman, con distancias marcadas por el terreno y equipo de asistencia obligatorio en larga distancia.",
+ srcIND:"<b>Independientes</b>: pruebas fuera de circuito. Las fechas de XTRI e independientes son orientativas — conviene confirmarlas con el organizador.",
+ srcElev:"<b>Desnivel</b>: valores típicos según el perfil del terreno, salvo en los recorridos documentados. Varía según la fuente, la edición y el GPS.",
+ srcMap:"Mapa base: Natural Earth (dominio público), proyección equirectangular.",
+ months:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+ mAbbr:["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"],
+ terr:{plat:"Llano",vallonne:"Ondulado",montagneux:"Montañoso"},
+ swim:{"Lac":"Lago","Océan":"Océano","Rivière":"Río","Baie":"Bahía","Réservoir":"Embalse","Fjord":"Fiordo"},
+ cont:{EU:"Europa",NA:"América del Norte",SA:"América del Sur",AS:"Asia",OC:"Oceanía",AF:"África"},
+ serie:{IM:"Ironman",CH:"Challenge",XT:"XTRI",IND:"Independiente"},
+ co:{"Afrique du Sud":"Sudáfrica","Allemagne":"Alemania","Argentine":"Argentina","Australie":"Australia","Autriche":"Austria","Azerbaïdjan":"Azerbaiyán","Belgique":"Bélgica","Brésil":"Brasil","Canada":"Canadá","Chili":"Chile","Chine":"China","Corée du Sud":"Corea del Sur","Croatie":"Croacia","Danemark":"Dinamarca","Espagne":"España","Estonie":"Estonia","Finlande":"Finlandia","France":"Francia","Israël":"Israel","Italie":"Italia","Japon":"Japón","Luxembourg":"Luxemburgo","Malaisie":"Malasia","Mexique":"México","Norvège":"Noruega","Nouvelle-Zélande":"Nueva Zelanda","Oman":"Omán","Pays-Bas":"Países Bajos","Philippines":"Filipinas","Pologne":"Polonia","Portugal":"Portugal","Pérou":"Perú","Royaume-Uni":"Reino Unido","Salvador":"El Salvador","Slovaquie":"Eslovaquia","Sri Lanka":"Sri Lanka","Suisse":"Suiza","Suède":"Suecia","Taïwan":"Taiwán","Tchéquie":"Chequia","Uruguay":"Uruguay","Vietnam":"Vietnam","Équateur":"Ecuador","États-Unis":"Estados Unidos"}
+}
+};
+let LG="fr";
+const t=k=>{const v=I18N[LG][k];return v===undefined?I18N.fr[k]:v;};
+const tCo=c=>(I18N[LG].co&&I18N[LG].co[c])||c;
+const tSwim=s=>I18N[LG].swim[s]||s;
+const tTerr=k=>I18N[LG].terr[k]||k;
+const tCont=k=>I18N[LG].cont[k]||k;
+const tSerie=k=>I18N[LG].serie[k]||k;
+
 const TO={plat:1,vallonne:2,montagneux:3};
-const CONT={EU:"Europe",NA:"Amérique du Nord",SA:"Amérique du Sud",AS:"Asie",OC:"Océanie",AF:"Afrique"};
-const SERIE={IM:"Ironman",CH:"Challenge",IND:"Indépendante"};
-const SCOL={IM:"#38BDF8",CH:"#A78BFA",IND:"#4ADE80"};
+const SCOL={IM:"#A98CFF",CH:"#3FD8C8",XT:"#FF9E5C",IND:"#FF8FB8"};
 
 /* d date · n nom · c ville · co pays · fl drapeau · ct continent
    s série IM|CH|IND · t distance F(longue)|H(moyenne)
@@ -436,35 +812,41 @@ const R=[
 {d:"2026-08-30",n:"Challenge Fortaleza",c:"Fortaleza",co:"Brésil",fl:"🇧🇷",ct:"SA",s:"CH",t:"H",sw:"Océan",bk:"plat",rn:"plat",la:-3.73,lo:-38.52,u:"https://challengefamily.com/races/challenge-fortaleza/"},
 {d:"2026-09-12",n:"Challenge Almere-Amsterdam",c:"Almere",co:"Pays-Bas",fl:"🇳🇱",ct:"EU",s:"CH",t:"F",sw:"Lac",bk:"plat",rn:"plat",bm:150,la:52.37,lo:5.22,u:"https://challenge-almere.com/"},
 {d:"2026-09-12",n:"Challenge Almere-Amsterdam 113",c:"Almere",co:"Pays-Bas",fl:"🇳🇱",ct:"EU",s:"CH",t:"H",sw:"Lac",bk:"plat",rn:"plat",bm:80,la:52.37,lo:5.22,u:"https://challenge-almere.com/"},
-{d:"2026-09-13",n:"Challenge Esprit Montréal",c:"Montréal",co:"Canada",fl:"🇨🇦",ct:"NA",s:"CH",t:"H",sw:"Rivière",bk:"plat",rn:"plat",a:1,la:45.50,lo:-73.53,u:"https://challengefamily.com/races/challenge-esprit-montreal/"},
+{d:"2026-09-13",n:"Challenge Esprit Montréal",c:"Montréal",co:"Canada",fl:"🇨🇦",ct:"NA",s:"CH",t:"H",sw:"Rivière",bk:"plat",rn:"plat",la:45.50,lo:-73.53,u:"https://challengefamily.com/races/challenge-esprit-montreal/"},
 {d:"2026-10-04",n:"Challenge Sanremo",c:"Sanremo",co:"Italie",fl:"🇮🇹",ct:"EU",s:"CH",t:"H",sw:"Océan",bk:"montagneux",rn:"plat",bm:1300,la:43.82,lo:7.78,u:"https://challenge-sanremo.com/"},
 {d:"2026-10-10",n:"Challenge Vieux-Boucau",c:"Vieux-Boucau",co:"France",fl:"🇫🇷",ct:"EU",s:"CH",t:"H",sw:"Lac",bk:"plat",rn:"plat",la:43.79,lo:-1.40,u:"https://challenge-vieuxboucau.com/"},
 {d:"2026-10-17",n:"Challenge Peguera-Mallorca",c:"Peguera",co:"Espagne",fl:"🇪🇸",ct:"EU",s:"CH",t:"H",sw:"Océan",bk:"montagneux",rn:"plat",bm:1200,la:39.54,lo:2.45,u:"https://challengefamily.com/races/challenge-peguera-mallorca/"},
 {d:"2026-10-25",n:"Challenge Barcelona",c:"Barcelone",co:"Espagne",fl:"🇪🇸",ct:"EU",s:"CH",t:"H",sw:"Océan",bk:"plat",rn:"plat",la:41.39,lo:2.17,u:"https://www.triathlon.barcelona/"},
 {d:"2026-10-25",n:"Challenge Forte Village Sardaigne",c:"Pula",co:"Italie",fl:"🇮🇹",ct:"EU",s:"CH",t:"H",sw:"Océan",bk:"plat",rn:"plat",la:38.98,lo:8.99,u:"https://challenge-fortevillage.com/"},
 
+{d:"2026-10-04",n:"Canada Man/Woman XTRI",c:"Lac-Mégantic",co:"Canada",fl:"🇨🇦",ct:"NA",s:"XT",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:2500,rm:1500,a:1,la:45.58,lo:-70.88,u:"https://caxtri.com/"},
+{d:"2026-10-04",n:"Canada Man/Woman Solo Point Five",c:"Lac-Mégantic",co:"Canada",fl:"🇨🇦",ct:"NA",s:"XT",t:"H",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:1300,rm:800,a:1,la:45.58,lo:-70.88,u:"https://caxtri.com/"},
+{d:"2026-06-28",n:"SAIL Challenge Québec R226",c:"Québec",co:"Canada",fl:"🇨🇦",ct:"NA",s:"CH",t:"F",sw:"Baie",bk:"plat",rn:"plat",bm:400,rm:100,la:46.82,lo:-71.21,u:"https://challengequebec.com/"},
+{d:"2026-06-27",n:"SAIL Challenge Québec P113",c:"Québec",co:"Canada",fl:"🇨🇦",ct:"NA",s:"CH",t:"H",sw:"Baie",bk:"plat",rn:"plat",bm:250,rm:60,la:46.82,lo:-71.21,u:"https://challengequebec.com/"},
+{d:"2026-07-12",n:"Trimemphré Magog",c:"Magog",co:"Canada",fl:"🇨🇦",ct:"NA",s:"IND",t:"H",sw:"Lac",bk:"vallonne",rn:"vallonne",la:45.27,lo:-72.15,u:"https://www.trimemphre.com/"},
+{d:"2026-09-27",n:"Triathlon de Boucherville – demi longue distance",c:"Boucherville",co:"Canada",fl:"🇨🇦",ct:"NA",s:"IND",t:"H",sw:"Rivière",bk:"plat",rn:"plat",la:45.61,lo:-73.44,u:"https://www.boucherville.ca/grands-evenements/triathlon-duathlon/"},
 /* ===== INDÉPENDANTES (21) — dates indicatives ===== */
 {d:"2026-01-30",n:"Israman",c:"Eilat",co:"Israël",fl:"🇮🇱",ct:"AS",s:"IND",t:"F",sw:"Océan",bk:"montagneux",rn:"montagneux",bm:2600,rm:600,a:1,la:29.55,lo:34.95,u:"https://www.israman.co.il/"},
-{d:"2026-06-20",n:"Swissman Xtreme",c:"Ascona → Grimsel",co:"Suisse",fl:"🇨🇭",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:5500,rm:1800,sd:"3,8 km",bd:"180 km",rd:"42 km",a:1,la:46.15,lo:8.77,u:"https://www.swissman.ch/"},
-{d:"2026-06-27",n:"Celtman Xtreme",c:"Torridon",co:"Royaume-Uni",fl:"🇬🇧",ct:"EU",s:"IND",t:"F",sw:"Fjord",bk:"montagneux",rn:"montagneux",bm:2000,rm:1800,sd:"3,4 km",bd:"202 km",rd:"42 km",a:1,la:57.55,lo:-5.51,u:"https://www.celtman.org.uk/"},
+{d:"2026-06-20",n:"Swissman Xtreme",c:"Ascona → Grimsel",co:"Suisse",fl:"🇨🇭",ct:"EU",s:"XT",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:3770,rm:1980,sd:"3,8 km",bd:"180 km",rd:"42 km",a:1,la:46.15,lo:8.77,u:"https://www.swissman.ch/"},
+{d:"2026-06-20",n:"Celtman Xtreme",c:"Torridon",co:"Royaume-Uni",fl:"🇬🇧",ct:"EU",s:"XT",t:"F",sw:"Fjord",bk:"montagneux",rn:"montagneux",bm:2187,rm:1582,sd:"3,4 km",bd:"202 km",rd:"42 km",a:1,la:57.55,lo:-5.51,u:"https://www.celtman.org.uk/"},
 {d:"2026-07-05",n:"Lake of Bays Half",c:"Baysville",co:"Canada",fl:"🇨🇦",ct:"NA",s:"IND",t:"H",sw:"Lac",bk:"vallonne",rn:"vallonne",a:1,la:45.32,lo:-79.13,u:"https://www.multisportcanada.com/"},
-{d:"2026-07-11",n:"Altriman",c:"Font-Romeu",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:4200,rm:1200,sd:"3,8 km",bd:"181 km",rd:"42 km",a:1,la:42.51,lo:2.04,u:"https://www.altriman.com/"},
+{d:"2026-07-11",n:"Altriman",c:"Font-Romeu",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:5000,rm:1100,sd:"3,8 km",bd:"197 km",rd:"42 km",a:1,la:42.51,lo:2.04,u:"https://www.altriman.com/"},
 {d:"2026-07-19",n:"Triathlon de Deauville",c:"Deauville",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"H",sw:"Océan",bk:"vallonne",rn:"plat",a:1,la:49.36,lo:0.07,u:"https://www.triathlondeauville.com/"},
 {d:"2026-07-26",n:"Outlaw Triathlon",c:"Nottingham",co:"Royaume-Uni",fl:"🇬🇧",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"plat",rn:"plat",bm:400,a:1,la:52.95,lo:-1.15,u:"https://www.outlawtriathlon.com/"},
 {d:"2026-07-30",n:"Alpe d'Huez Triathlon L",c:"Alpe d'Huez",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"H",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:3400,rm:600,sd:"2,2 km",bd:"115 km",rd:"22 km",a:1,la:45.09,lo:6.07,u:"https://www.alpetriathlon.com/"},
-{d:"2026-08-01",n:"Norseman Xtreme",c:"Eidfjord → Gaustatoppen",co:"Norvège",fl:"🇳🇴",ct:"EU",s:"IND",t:"F",sw:"Fjord",bk:"montagneux",rn:"montagneux",bm:3000,rm:1800,a:1,la:60.47,lo:7.07,u:"https://nxtri.com/"},
+{d:"2026-08-01",n:"Norseman Xtreme",c:"Eidfjord → Gaustatoppen",co:"Norvège",fl:"🇳🇴",ct:"EU",s:"XT",t:"F",sw:"Fjord",bk:"montagneux",rn:"montagneux",bm:3502,rm:1800,a:1,la:60.47,lo:7.07,u:"https://nxtri.com/"},
 {d:"2026-08-08",n:"Gérardmer Triathlon L",c:"Gérardmer",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"H",sw:"Lac",bk:"montagneux",rn:"vallonne",bm:1400,rm:250,a:1,la:48.07,lo:6.87,u:"https://www.triathlon-gerardmer.com/"},
 {d:"2026-08-15",n:"Embrunman",c:"Embrun",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:5000,rm:500,sd:"3,8 km",bd:"188 km",rd:"42,2 km",a:1,la:44.56,lo:6.50,u:"https://www.embrunman.com/"},
 {d:"2026-08-22",n:"Bilbao Triathlon",c:"Bilbao",co:"Espagne",fl:"🇪🇸",ct:"EU",s:"IND",t:"F",sw:"Rivière",bk:"montagneux",rn:"vallonne",bm:2600,rm:300,a:1,la:43.26,lo:-2.93,u:"https://www.bilbaotriathlon.com/"},
-{d:"2026-09-05",n:"Icon Livigno Xtreme",c:"Livigno",co:"Italie",fl:"🇮🇹",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:4400,rm:1600,a:1,la:46.53,lo:10.13,u:"https://www.icontri.com/"},
-{d:"2026-09-05",n:"Alpsman Xtreme",c:"Annecy",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:3800,rm:1200,a:1,la:45.90,lo:6.13,u:"https://www.alpsman.fr/"},
-{d:"2026-09-12",n:"The Brutal",c:"Llanberis",co:"Royaume-Uni",fl:"🇬🇧",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:2600,rm:1500,a:1,la:53.12,lo:-4.13,u:"https://www.brutalevents.co.uk/"},
+{d:"2026-09-05",n:"Icon Livigno Xtreme",c:"Livigno",co:"Italie",fl:"🇮🇹",ct:"EU",s:"XT",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:5000,rm:1100,a:1,la:46.53,lo:10.13,u:"https://www.icontri.com/",bd:"195 km"},
+{d:"2026-09-05",n:"Alpsman Xtreme",c:"Annecy",co:"France",fl:"🇫🇷",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:4300,rm:1300,a:1,la:45.90,lo:6.13,u:"https://www.alpsman.fr/",bd:"183 km"},
+{d:"2026-09-12",n:"The Brutal",c:"Llanberis",co:"Royaume-Uni",fl:"🇬🇧",ct:"EU",s:"IND",t:"F",sw:"Lac",bk:"montagneux",rn:"montagneux",bm:3000,rm:1350,a:1,la:53.12,lo:-4.13,u:"https://www.brutalevents.co.uk/"},
 {d:"2026-09-13",n:"Barrelman",c:"Niagara-on-the-Lake",co:"Canada",fl:"🇨🇦",ct:"NA",s:"IND",t:"H",sw:"Rivière",bk:"plat",rn:"plat",a:1,la:43.26,lo:-79.07,u:"https://www.multisportcanada.com/"},
 {d:"2026-09-19",n:"Redman Triathlon",c:"Oklahoma City",co:"États-Unis",fl:"🇺🇸",ct:"NA",s:"IND",t:"F",sw:"Lac",bk:"plat",rn:"plat",a:1,la:35.47,lo:-97.52,u:"https://www.redmantriathlon.com/"},
 {d:"2026-10-17",n:"Beach2Battleship",c:"Wilmington",co:"États-Unis",fl:"🇺🇸",ct:"NA",s:"IND",t:"F",sw:"Rivière",bk:"plat",rn:"plat",a:1,la:34.23,lo:-77.95,u:"https://www.beach2battleship.com/"},
 {d:"2026-10-17",n:"Beach2Battleship Half",c:"Wilmington",co:"États-Unis",fl:"🇺🇸",ct:"NA",s:"IND",t:"H",sw:"Rivière",bk:"plat",rn:"plat",a:1,la:34.23,lo:-77.95,u:"https://www.beach2battleship.com/"},
 {d:"2026-10-24",n:"Great Floridian",c:"Clermont",co:"États-Unis",fl:"🇺🇸",ct:"NA",s:"IND",t:"F",sw:"Lac",bk:"vallonne",rn:"vallonne",a:1,la:28.55,lo:-81.77,u:"https://www.greatfloridiantriathlon.com/"},
-{d:"2026-12-05",n:"Patagonman Xtreme",c:"Puerto Chacabuco",co:"Chili",fl:"🇨🇱",ct:"SA",s:"IND",t:"F",sw:"Fjord",bk:"montagneux",rn:"vallonne",bm:2200,rm:400,a:1,la:-45.46,lo:-72.82,u:"https://www.patagonman.com/"}
+{d:"2026-12-05",n:"Patagonman Xtreme",c:"Puerto Chacabuco",co:"Chili",fl:"🇨🇱",ct:"SA",s:"IND",t:"F",sw:"Fjord",bk:"montagneux",rn:"vallonne",bm:2439,rm:743,a:1,la:-45.46,lo:-72.82,u:"https://www.patagonman.com/"}
 ];
 
 const SWIMMOD={"Océan":1,"Baie":0.5,"Lac":0,"Rivière":0,"Réservoir":0,"Fjord":1};
@@ -478,8 +860,8 @@ function dSwim(r){return r.sd||(r.t==="F"?"3,8 km":"1,9 km");}
 function dBike(r){return r.bd||(r.t==="F"?"180 km":"90 km");}
 function dRun(r){ return r.rd||(r.t==="F"?"42,2 km":"21,1 km");}
 function fmtM(m){return (""+m).replace(/\B(?=(\d{3})+(?!\d))/g,"\u202f")+" m";}
-const MONTHS=["jan","fév","mar","avr","mai","juin","juil","aoû","sep","oct","nov","déc"];
-function fmtDate(iso){const p=iso.split("-").map(Number);return p[2]+" "+MONTHS[p[1]-1];}
+function fmtDate(iso){const p=iso.split("-").map(Number),a=I18N[LG].mAbbr[p[1]-1];
+  return LG==="en" ? a+" "+p[2] : p[2]+" "+a;}
 
 const PATHS={
   plat:"M0 24 L0 18.5 L8 18 L16 17.5 L24 18 L32 17.5 L40 18 L48 17.5 L56 18 L64 17.8 L64 24 Z",
@@ -493,7 +875,7 @@ const LINE={
 };
 function terrainGlyph(t,c){return '<svg class="glyph" viewBox="0 0 64 24" preserveAspectRatio="none" aria-hidden="true"><path d="'+PATHS[t]+'" fill="'+c+'" fill-opacity="0.16"/><path d="'+LINE[t]+'" fill="none" stroke="'+c+'" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>';}
 function swimGlyph(c){return '<svg class="glyph" viewBox="0 0 64 24" preserveAspectRatio="none" aria-hidden="true"><path d="M0 10 Q8 5 16 10 T32 10 T48 10 T64 10" fill="none" stroke="'+c+'" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/><path d="M0 16 Q8 11 16 16 T32 16 T48 16 T64 16" fill="none" stroke="'+c+'" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>';}
-const C={swim:"#38BDF8",bike:"#FBBF24",run:"#FB7185"};
+const C={swim:"#5CD6E0",bike:"#E9B96B",run:"#E58AA8"};
 
 let state={view:"list",t:"all",mois:"",serie:"",cont:"",sw:"",bk:"",rn:"",q:"",sort:"date",dir:1};
 
@@ -501,17 +883,25 @@ function uniq(a){return [...new Set(a)];}
 function fillSelect(id,opts,allLabel){
   document.getElementById(id).innerHTML='<option value="">'+allLabel+'</option>'+opts.map(o=>'<option value="'+o.v+'">'+o.t+'</option>').join("");
 }
-const MOISLONG=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-fillSelect("f-mois",MOISLONG.map((m,i)=>{
-  const k=String(i+1).padStart(2,"0");
-  const n=R.filter(r=>r.d.slice(5,7)===k).length;
-  return {v:k,t:m+" ("+n+")"};
-}).filter(o=>!/\(0\)$/.test(o.t)),"Tous");
-fillSelect("f-serie",["IM","CH","IND"].map(k=>({v:k,t:SERIE[k]})),"Toutes");
-fillSelect("f-cont",Object.keys(CONT).filter(k=>uniq(R.map(r=>r.ct)).includes(k)).map(k=>({v:k,t:CONT[k]})),"Tous");
-fillSelect("f-swim",uniq(R.map(r=>r.sw)).sort().map(s=>({v:s,t:s})),"Toutes");
-fillSelect("f-bike",["plat","vallonne","montagneux"].map(k=>({v:k,t:T[k]})),"Tous");
-fillSelect("f-run",["plat","vallonne","montagneux"].map(k=>({v:k,t:T[k]})),"Tous");
+function buildSelects(){
+  const keep={};
+  ["f-mois","f-serie","f-cont","f-swim","f-bike","f-run"].forEach(id=>{
+    const el=document.getElementById(id); if(el) keep[id]=el.value;
+  });
+  fillSelect("f-mois",I18N[LG].months.map((m,i)=>{
+    const k=String(i+1).padStart(2,"0");
+    const n=R.filter(r=>r.d.slice(5,7)===k).length;
+    return n?{v:k,t:m+" ("+n+")"}:null;
+  }).filter(Boolean),t("allF"));
+  fillSelect("f-serie",["IM","CH","XT","IND"].map(k=>({v:k,t:tSerie(k)})),t("allFe"));
+  fillSelect("f-cont",["EU","NA","SA","AS","OC","AF"].filter(k=>uniq(R.map(r=>r.ct)).includes(k))
+    .map(k=>({v:k,t:tCont(k)})),t("allF"));
+  fillSelect("f-swim",uniq(R.map(r=>r.sw)).map(s=>({v:s,t:tSwim(s)}))
+    .sort((a,b)=>a.t.localeCompare(b.t)),t("allFe"));
+  fillSelect("f-bike",["plat","vallonne","montagneux"].map(k=>({v:k,t:tTerr(k)})),t("allF"));
+  fillSelect("f-run",["plat","vallonne","montagneux"].map(k=>({v:k,t:tTerr(k)})),t("allF"));
+  Object.keys(keep).forEach(id=>{const el=document.getElementById(id); if(el) el.value=keep[id];});
+}
 
 function passes(r){
   if(state.t!=="all" && r.t!==state.t) return false;
@@ -551,29 +941,30 @@ function meterHTML(l){
   return s+'</div>';
 }
 function discCell(cls,key,label,glyph,dist,elev){
-  const e = elev!=null ? '<span class="disc-elev">D+ '+fmtM(elev)+'</span>' : '';
+  const DP=(LG==="fr"?"D+ ":LG==="de"?"Hm ":"+");
+  const e = elev!=null ? '<span class="disc-elev">'+DP+fmtM(elev)+'</span>' : '';
   return '<div class="c-disc '+cls+'"><div class="disc-top"><span class="disc-key">'+key+'</span><span class="disc-dist">'+dist+'</span></div>'+glyph+
     '<div class="disc-bot"><span class="disc-val">'+label+'</span>'+e+'</div></div>';
 }
 function cardHTML(r,i){
   const lvl=diffLevel(r);
   const dcol=lvl<=2?'var(--easy)':lvl===3?'var(--mid)':'var(--hard)';
-  const badge='<span class="badge '+r.t+'">'+(r.t==="F"?"Longue":"Moyenne")+'</span>';
+  const badge='<span class="badge '+r.t+'">'+(r.t==="F"?t("dLong"):t("dMid"))+'</span>';
   return '<div class="card s-'+r.s+'" id="card-'+r.id+'">'+
     '<div class="c-date">'+badge+'<span class="dnum">'+(r.a?"~":"")+fmtDate(r.d)+'</span></div>'+
-    '<div class="c-main"><div class="rname">'+r.n+'<span class="serie '+r.s+'">'+SERIE[r.s]+'</span></div>'+
-      '<div class="rmeta"><span class="flag">'+r.fl+'</span> '+r.c+' · '+r.co+' · '+CONT[r.ct]+'</div>'+linksHTML(r)+'</div>'+
-    discCell("swim","Nage",r.sw,swimGlyph(C.swim),dSwim(r),null)+
-    discCell("bike","Vélo",T[r.bk],terrainGlyph(r.bk,C.bike),dBike(r),bikeM(r))+
-    discCell("run","Course",T[r.rn],terrainGlyph(r.rn,C.run),dRun(r),runM(r))+
+    '<div class="c-main"><div class="rname">'+r.n+'<span class="serie '+r.s+'">'+tSerie(r.s)+'</span></div>'+
+      '<div class="rmeta"><span class="flag">'+r.fl+'</span> '+r.c+' · '+tCo(r.co)+' · '+tCont(r.ct)+'</div>'+linksHTML(r)+'</div>'+
+    discCell("swim",t("kSwim"),tSwim(r.sw),swimGlyph(C.swim),dSwim(r),null)+
+    discCell("bike",t("kBike"),tTerr(r.bk),terrainGlyph(r.bk,C.bike),dBike(r),bikeM(r))+
+    discCell("run",t("kRun"),tTerr(r.rn),terrainGlyph(r.rn,C.run),dRun(r),runM(r))+
     '<div class="c-diff"><span class="diff-lbl">Diff.</span>'+meterHTML(lvl)+'<span class="diff-num" style="color:'+dcol+'">'+lvl+'/5</span></div>'+
   '</div>';
 }
 
 function linksHTML(r){
   const q=encodeURIComponent(r.n+" triathlon 2026");
-  const search='<a href="https://duckduckgo.com/?q='+q+'" target="_blank" rel="noopener">Rechercher ↗</a>';
-  const site=r.u?'<a class="primary" href="'+r.u+'" target="_blank" rel="noopener">Site officiel ↗</a>':'';
+  const search='<a href="https://duckduckgo.com/?q='+q+'" target="_blank" rel="noopener">'+t("search")+' ↗</a>';
+  const site=r.u?'<a class="primary" href="'+r.u+'" target="_blank" rel="noopener">'+t("site")+' ↗</a>':'';
   return '<div class="links">'+site+search+'</div>';
 }
 
@@ -699,15 +1090,15 @@ function showTip(circle){
   const grp=current().filter(r=>Math.abs(mx(r.lo)-cx)<tol && Math.abs(my(r.la)-cy)<tol);
   if(!grp.length) return;
   const r=grp[0];
-  const extra=grp.length>1 ? '<div class="tt-m">+ '+(grp.length-1)+' autre'+(grp.length>2?'s':'')+' course'+(grp.length>2?'s':'')+' ici</div>' : '';
+  const extra=grp.length>1 ? '<div class="tt-m">+ '+(grp.length-1)+' '+(grp.length>2?t("ttMoreN"):t("ttMore1"))+'</div>' : '';
   TIP.innerHTML=
     '<div class="tt-n"><i style="background:'+SCOL[r.s]+'"></i>'+esc(r.n)+'</div>'+
-    '<div class="tt-m">'+(r.a?"~":"")+fmtDate(r.d)+' · '+(r.t==="F"?"Longue":"Moyenne")+'<br>'+
-      esc(r.c)+', '+esc(r.co)+'<br>'+
-      'Vélo <b>'+T[r.bk]+'</b> · D+ '+fmtM(bikeM(r))+'<br>'+
-      'Course <b>'+T[r.rn]+'</b> · Nage '+esc(r.sw)+'</div>'+
+    '<div class="tt-m">'+(r.a?"~":"")+fmtDate(r.d)+' · '+(r.t==="F"?t("dLong"):t("dMid"))+'<br>'+
+      esc(r.c)+', '+esc(tCo(r.co))+'<br>'+
+      t("kBike")+' <b>'+tTerr(r.bk)+'</b> · '+fmtM(bikeM(r))+'<br>'+
+      t("kRun")+' <b>'+tTerr(r.rn)+'</b> · '+t("kSwim")+' '+tSwim(r.sw)+'</div>'+
     extra+
-    '<div class="tt-go">Cliquer pour la fiche</div>';
+    '<div class="tt-go">'+t("ttGo")+'</div>';
   // mesurer et positionner AVANT de rendre visible (evite un flash a l'ancienne position)
   const cb=circle.getBoundingClientRect(), wb=WRAP.getBoundingClientRect();
   const px=cb.left-wb.left+cb.width/2, py=cb.top-wb.top;
@@ -739,7 +1130,7 @@ function selectPoint(c){
   const rows=current().filter(r=>Math.abs(mx(r.lo)-cx)<tol && Math.abs(my(r.la)-cy)<tol);
   if(!rows.length) return;
   rows.forEach(r=>{const n=document.querySelector('.pt[data-id="'+r.id+'"]');if(n)n.classList.add("sel");});
-  showPopup(rows, rows.length>1 ? rows.length+" courses · "+rows[0].c : rows[0].c+", "+rows[0].co);
+  showPopup(rows, rows.length>1 ? rows.length+" "+t("races")+" · "+rows[0].c : rows[0].c+", "+tCo(rows[0].co));
 }
 // filet de securite : si le navigateur delivre bien un clic sur le cercle
 document.getElementById("pts").addEventListener("click",e=>{
@@ -756,11 +1147,11 @@ function render(){
   const rows=current();
   if(state.view==="list"){
     const el=document.getElementById("list");
-    el.innerHTML=rows.length?rows.map(cardHTML).join(""):'<div class="empty"><b>Aucune course</b>Modifiez les filtres ou réinitialisez la recherche.</div>';
+    el.innerHTML=rows.length?rows.map(cardHTML).join(""):'<div class="empty"><b>'+t("emptyT")+'</b>'+t("emptyS")+'</div>';
   }else{
     renderMap(rows);
   }
-  document.getElementById("rc").innerHTML='<b>'+rows.length+'</b> course'+(rows.length>1?'s':'')+' affichée'+(rows.length>1?'s':'');
+  document.getElementById("rc").innerHTML='<b>'+rows.length+'</b> '+(rows.length>1?t("shownN"):t("shown1"));
 }
 function setView(v){
   state.view=v;
@@ -773,12 +1164,13 @@ function setView(v){
 function buildCounts(){
   const n=s=>R.filter(r=>r.s===s).length;
   document.getElementById("counts").innerHTML=
-    '<span class="pill"><b>'+R.length+'</b> courses</span>'+
+    '<span class="pill"><b>'+R.length+'</b> '+t("races")+'</span>'+
     '<span class="pill k-IM"><b>'+n("IM")+'</b> Ironman</span>'+
     '<span class="pill k-CH"><b>'+n("CH")+'</b> Challenge</span>'+
-    '<span class="pill k-IND"><b>'+n("IND")+'</b> Indépendantes</span>'+
-    '<span class="pill"><b>'+R.filter(r=>r.t==="F").length+'</b> longue distance</span>'+
-    '<span class="pill"><b>'+R.filter(r=>r.t==="H").length+'</b> moyenne distance</span>';
+    '<span class="pill k-XT"><b>'+n("XT")+'</b> XTRI</span>'+
+    '<span class="pill k-IND"><b>'+n("IND")+'</b> '+tSerie("IND")+'</span>'+
+    '<span class="pill"><b>'+R.filter(r=>r.t==="F").length+'</b> '+t("longD")+'</span>'+
+    '<span class="pill"><b>'+R.filter(r=>r.t==="H").length+'</b> '+t("midD")+'</span>';
 }
 
 document.getElementById("segview").addEventListener("click",e=>{
@@ -820,11 +1212,109 @@ function syncSort(){
 }
 function paintLegend(){
   [["lg-plat","plat"],["lg-vall","vallonne"],["lg-mont","montagneux"]].forEach(([id,k])=>{
-    document.getElementById(id).innerHTML='<path d="'+PATHS[k]+'" fill="#8A97A6" fill-opacity="0.18"/><path d="'+LINE[k]+'" fill="none" stroke="#C7D0DA" stroke-width="1.6" stroke-linecap="round"/>';
+    document.getElementById(id).innerHTML='<path d="'+PATHS[k]+'" fill="#F3EEFF" fill-opacity="0.16"/><path d="'+LINE[k]+'" fill="none" stroke="#E8DFFF" stroke-width="1.6" stroke-linecap="round"/>';
   });
 }
+function applyLang(){
+  document.documentElement.lang=t("htmlLang");
+  document.title=t("title");
+  document.querySelectorAll("[data-i]").forEach(el=>{
+    const s=t(el.getAttribute("data-i"));
+    if(/<[a-z]/i.test(s)) el.innerHTML=s; else el.textContent=s;
+  });
+  document.querySelectorAll("[data-iT]").forEach(el=>{el.textContent=" "+tTerr(el.getAttribute("data-iT"));});
+  document.querySelectorAll("[data-iS]").forEach(el=>{el.textContent=tSerie(el.getAttribute("data-iS"));});
+  document.querySelectorAll("[data-ip]").forEach(el=>{el.placeholder=t(el.getAttribute("data-ip"));});
+  buildSelects(); buildCounts(); syncSort();
+  document.getElementById("popup").classList.remove("on"); hideTip();
+  render();
+}
+document.getElementById("seglang").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b||b.dataset.lg===LG) return;
+  [...e.currentTarget.children].forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); LG=b.dataset.lg; applyLang();
+});
 R.forEach((r,i)=>r.id=i);
-buildCounts();syncSort();paintLegend();drawGraticule();render();
+paintLegend();drawGraticule();applyLang();
+
+/* ---------------- Fond : grille de points sur champ coloré mouvant ----------------
+   Chaque point prend sa couleur dans un champ qui dérive lentement.
+   Les points sont regroupés par teinte pour ne changer fillStyle qu'une douzaine
+   de fois par image, au lieu d'une fois par point. */
+(function(){
+  const cv=document.getElementById("bgdots");
+  if(!cv||!cv.getContext) return;
+  const ctx=cv.getContext("2d",{alpha:true});
+  if(!ctx){cv.style.display="none";return;}   // contexte 2D indisponible : on s'efface proprement
+  const reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // violet accent → magenta → turquoise
+  const STOPS=[[139,107,240],[214,104,186],[63,216,200]];
+  const BUCKETS=12;
+  const PAL=[];
+  for(let i=0;i<BUCKETS;i++){
+    const u=i/(BUCKETS-1);
+    let a,b,k;
+    if(u<0.5){a=STOPS[0];b=STOPS[1];k=u/0.5;} else {a=STOPS[1];b=STOPS[2];k=(u-0.5)/0.5;}
+    PAL.push("rgb("+Math.round(a[0]+(b[0]-a[0])*k)+","
+                   +Math.round(a[1]+(b[1]-a[1])*k)+","
+                   +Math.round(a[2]+(b[2]-a[2])*k)+")");
+  }
+
+  let W=0,H=0,dpr=1,step=26,cols=0,rows=0;
+  function resize(){
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    W=window.innerWidth; H=window.innerHeight;
+    step=W<620?14:16;
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+    cv.style.width=W+"px"; cv.style.height=H+"px";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    cols=Math.ceil(W/step)+1; rows=Math.ceil(H/step)+1;
+  }
+
+  function frame(ms){
+    const t=ms*0.00016;
+    ctx.clearRect(0,0,W,H);
+    const paths=[]; for(let i=0;i<BUCKETS;i++) paths.push(new Path2D());
+    for(let r=0;r<rows;r++){
+      const y=r*step;
+      for(let c=0;c<cols;c++){
+        const x=c*step;
+        // champ de teinte : trois ondes lentes désynchronisées
+        const n=Math.sin(x*0.0060+t*1.10)
+               +Math.sin(y*0.0068-t*0.82)
+               +Math.sin((x+y)*0.0037+t*0.55);
+        const u=(n+3)/6;
+        // champ d'intensité : pilote le rayon, d'où la sensation de respiration
+        const b=0.5+0.5*Math.sin((x-y)*0.0034-t*1.35+Math.sin(y*0.002+t*0.4));
+        const rad=0.18+0.62*b*b;
+        let idx=(u*BUCKETS)|0; if(idx<0)idx=0; if(idx>=BUCKETS)idx=BUCKETS-1;
+        // sous ~1,3 px un carré et un disque sont indiscernables :
+        // rect() est bien moins coûteux à tracer que arc()
+        const s=rad*2;
+        paths[idx].rect(x-rad,y-rad,s,s);
+      }
+    }
+    for(let i=0;i<BUCKETS;i++){
+      ctx.fillStyle=PAL[i];
+      ctx.globalAlpha=0.52;
+      ctx.fill(paths[i]);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  let raf=null,running=false;
+  function loop(ms){ frame(ms); raf=requestAnimationFrame(loop); }
+  function start(){ if(running||reduce)return; running=true; raf=requestAnimationFrame(loop); }
+  function stop(){ running=false; if(raf)cancelAnimationFrame(raf); raf=null; }
+
+  resize(); frame(0);
+  start();
+  let rt=null;
+  window.addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{resize();frame(performance.now());},160);});
+  document.addEventListener("visibilitychange",()=>{document.hidden?stop():start();});
+})();
+
 </script>
 </body>
 </html>
